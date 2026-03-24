@@ -1,4 +1,4 @@
-name: mech-interp
+name: circuit-gen
 channels:
   - conda-forge
 dependencies:

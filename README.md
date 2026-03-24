@@ -47,7 +47,7 @@ circuit-generalization/
 
 ```bash
 conda env create -f environment.yml
-conda activate mech-interp
+conda activate circuit-gen
 ```
 
 Key dependencies: Python 3.11, PyTorch 2.10, TransformerLens, JupyterLab.
@@ -55,7 +55,7 @@ Key dependencies: Python 3.11, PyTorch 2.10, TransformerLens, JupyterLab.
 **Running notebooks:**
 
 ```bash
-conda activate mech-interp && jupyter lab
+conda activate circuit-gen && jupyter lab
 ```
 
 Notebooks are numbered by week (`w01`, `w02`, ...) and build on each other. Start from `w01-residual-stream.ipynb` if you're following along from the beginning.
