@@ -1,8 +1,24 @@
 # Lab Notebook — Circuit Generalization
 
-*A running log of work done, decisions made, and things learned specific to this project. New entries go at the top. Each entry has a date, a summary of what was done, and any reasoning or surprises worth preserving.*
+*A running log of work done, decisions made, and things learned. New entries go at the top.*
 
-*For infrastructure and cross-project decisions, see the top-level `LAB_NOTEBOOK.md`.*
+---
+
+## 2026-03-23
+
+Finished 80k Hours Ep. 107: Chris Olah. Good orientation to the field before touching the math — the framing of mech interp as "trying to read the source code" rather than just observe behavior is a useful mental model to carry into the notebook work.
+
+Created `w01-residual-stream.ipynb` — covers loading GPT-2 Small via HookedTransformer, running a forward pass with activation caching, inspecting residual stream norms across layers, decomposing attention vs MLP contributions, and verifying next-token predictions.
+
+---
+
+## 2026-03-22 — Week 1 Plan
+
+- [x] Listen: [80k Hours Ep. 107 — Chris Olah](https://80000hours.org/podcast/episodes/chris-olah-interpretability-research/)
+- [ ] Read: [A Mathematical Framework for Transformer Circuits](https://transformer-circuits.pub/2021/framework/index.html) — Elhage 2021, sections 1–4 (residual stream, QK circuit, OV circuit, virtual attention heads)
+- [ ] [ARENA exercises 1.1–1.3](https://github.com/callummcdougall/ARENA_3.0/blob/main/chapter1_transformer_interp/exercises/part2_intro_to_mech_interp/1.2_Intro_to_Mech_Interp_exercises.ipynb)
+- [x] Create Week 1 notebook: load GPT-2 Small, inspect residual stream norms, decompose attention vs MLP contributions
+- [ ] Execute notebook, review plots, and fill in reflection cell
 
 ---
 
