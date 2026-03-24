@@ -1,0 +1,26 @@
+# Model weights and checkpoints
+*.pt
+*.pth
+*.safetensors
+checkpoints/
+
+# Jupyter artifacts
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# Large data files
+*.csv.gz
+*.parquet
+data/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Experiment outputs (keep configs, ignore raw data dumps)
+experiments/**/output/
+experiments/**/*.log
+
+# OS
+.DS_Store
