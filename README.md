@@ -25,7 +25,7 @@ If safety-relevant circuits (e.g. refusal mechanisms) are prompt-specific rather
 
 ## Disclaimer
 
-This is independent research I'm doing for my own education and curiosity. I'm not a professional researcher, and the work here should be read accordingly. I'm sharing it publicly in the spirit of open science — replication attempts, critiques, and suggestions are welcome.
+This is independent research I'm doing for my own education and curiosity. I'm not a professional researcher, and the work here should be read accordingly. I'm sharing it publicly in the spirit of open science and shared education — replication attempts, critiques, and suggestions are welcome.
 
 ---
 
@@ -33,6 +33,7 @@ This is independent research I'm doing for my own education and curiosity. I'm n
 
 ```
 circuit-generalization/
+├── LAB_NOTEBOOK.md  # Running log of work done, decisions made, and things learned
 ├── notebooks/       # Exploratory notebooks — named wNN-description.ipynb
 ├── src/             # Reusable Python modules extracted from notebooks
 ├── experiments/     # Experiment configs and raw output CSVs
@@ -72,5 +73,3 @@ This is the first of three planned projects:
 1. **Circuit Generalization** ← here — does a circuit activate consistently across diverse inputs?
 2. **Fine-Tuning Effects** — do circuits survive fine-tuning, and what predicts fragility?
 3. **Backdoor Detection** — can we plant a circuit via fine-tuning and then find it?
-
-Each project publishes independently to the [Alignment Forum](https://alignmentforum.org).
