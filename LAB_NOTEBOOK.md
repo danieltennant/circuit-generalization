@@ -4,6 +4,12 @@
 
 ---
 
+## 2026-03-24
+
+Fixed bugs in `w01-residual-stream.ipynb` to get it running. Listened to a NotebookLM audio summary of "A Mathematical Framework for Transformer Circuits" (Elhage 2021) and started reading the paper. Plan reading covers: Summary of Results, Transformer Overview, Zero-Layer Transformers, and One-Layer Attention-Only Transformers — stopping before the Two-Layer section, which is Week 2 material.
+
+---
+
 ## 2026-03-23
 
 Finished 80k Hours Ep. 107: Chris Olah. Good orientation to the field before touching the math — the framing of mech interp as "trying to read the source code" rather than just observe behavior is a useful mental model to carry into the notebook work.
