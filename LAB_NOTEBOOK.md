@@ -8,6 +8,13 @@
 
 Worked through the key concepts of the Math Framework paper (Elhage 2021) via Q&A: residual stream as communication channel, virtual weights, attention heads as independent and additive, OV/QK circuit decomposition, path expansion trick, skip-trigrams. Concepts are landing but linear algebra notation is a friction point — added 3Blue1Brown Essence of Linear Algebra as an optional refresher before continuing with the paper.
 
+Completed ARENA exercises 1.1, 1.2, and 1.3:
+- 1.1: Inspected GPT-2 Small config — 12 layers, 12 heads, 1024 context window
+- 1.2: Computed prediction accuracy from logits — model got 32/109 tokens correct (~29%)
+- 1.3: Manually reproduced the layer 0 attention pattern from Q and K vectors (dot products → mask → scale → softmax); confirmed it matches the cached pattern. Linear algebra notation (einsum, tensor shapes) was a significant friction point here — the 3Blue1Brown refresher is now a higher priority before continuing.
+
+Hit a setup issue in exercise 1.1 — the ARENA notebook uses `pkg_resources`, which was removed in `setuptools` v82.0.0. Fixed locally and submitted a PR to the ARENA repo to replace it with `importlib.metadata.packages_distributions`: [callummcdougall/ARENA_3.0#295](https://github.com/callummcdougall/ARENA_3.0/pull/295)
+
 ---
 
 ## 2026-03-24
