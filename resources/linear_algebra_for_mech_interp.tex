@@ -1,0 +1,891 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{parskip}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{mdframed}
+
+\geometry{margin=2.5cm, top=2.8cm, bottom=2.8cm}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=black,
+}
+
+% Exercise environment
+\newcounter{exercise}[section]
+\renewcommand{\theexercise}{\thesection.\arabic{exercise}}
+
+\newenvironment{exercise}[1][]{%
+    \refstepcounter{exercise}%
+    \par\medskip\noindent%
+    \textbf{Exercise~\theexercise}%
+    \ifx\relax#1\relax\else\ ---\ #1\fi\par\smallskip%
+}{%
+    \par\medskip%
+}
+
+% Motivation box
+\newmdenv[
+    linewidth=0.6pt,
+    linecolor=black!40,
+    backgroundcolor=black!3,
+    innerleftmargin=10pt,
+    innerrightmargin=10pt,
+    innertopmargin=6pt,
+    innerbottommargin=6pt,
+    skipabove=\medskipamount,
+    skipbelow=\medskipamount,
+]{motivbox}
+
+% Solution environment (for solutions section)
+\newcounter{solution}[section]
+\renewcommand{\thesolution}{\thesection.\arabic{solution}}
+
+\newenvironment{solution}[1][]{%
+    \refstepcounter{solution}%
+    \par\medskip\noindent%
+    \textbf{Solution~\thesolution}%
+    \ifx\relax#1\relax\else\ ---\ #1\fi\par\smallskip%
+}{%
+    \par\medskip%
+}
+
+% Inline code
+\newcommand{\code}[1]{\texttt{#1}}
+
+% Convenience: bold vectors
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+\title{\textbf{Linear Algebra for Mechanistic Interpretability}\\[0.4em]
+\large Pencil-and-Paper Exercises}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+\noindent
+\textbf{Who this is for.} Someone with a CS background whose linear algebra is rusty,
+working toward understanding how transformer attention works mechanically.
+
+\textbf{How to use this.} Work through each section in order. The exercises build on each
+other. Do them by hand --- the point is to build intuition, not to get answers fast.
+Check your work against the solutions starting on page~\pageref{sec:solutions}.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ──────────────────────────────────────────────────────────────────────────────
+\section{Vectors and Dot Products}
+% ──────────────────────────────────────────────────────────────────────────────
+
+\begin{motivbox}
+\textbf{Why this matters for transformers.}
+Every token in a transformer is represented as a vector (its ``embedding''). When the model
+computes attention, it is fundamentally asking: \emph{how similar is this query vector to
+each key vector?} That similarity is measured with a dot product. If you can read a dot
+product and know what it means geometrically, you can read an attention pattern and know
+what the model is ``looking at.''
+\end{motivbox}
+
+\begin{exercise}[Basic dot product (2D)]
+Compute the dot product of:
+\[
+    \vec{a} = \begin{bmatrix} 3 \\ 1 \end{bmatrix}, \qquad
+    \vec{b} = \begin{bmatrix} 2 \\ 4 \end{bmatrix}
+\]
+Recall: $\vec{a} \cdot \vec{b} = a_1 b_1 + a_2 b_2$.
+\end{exercise}
+
+\begin{exercise}[Basic dot product (3D)]
+Compute:
+\[
+    \vec{u} \cdot \vec{v} = \begin{bmatrix} 1 \\ -2 \\ 3 \end{bmatrix} \cdot
+                            \begin{bmatrix} 4 \\ 1 \\ 2 \end{bmatrix}
+\]
+\end{exercise}
+
+\begin{exercise}[Geometric interpretation]
+You are told that $\vec{a} \cdot \vec{b} = \|\vec{a}\| \|\vec{b}\| \cos\theta$,
+where $\theta$ is the angle between the vectors.
+
+For each case below, say whether the dot product will be \textbf{positive},
+\textbf{negative}, or \textbf{zero} --- and explain in one sentence what that
+means geometrically:
+\begin{enumerate}[label=(\alph*)]
+    \item Two vectors pointing in exactly the same direction.
+    \item Two vectors pointing in exactly opposite directions.
+    \item Two vectors that are perpendicular (orthogonal).
+    \item A long vector and a short vector pointing in the same direction, compared to
+          two unit vectors pointing in the same direction.
+          Which dot product is larger?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Dot product as similarity]
+Consider three 2-dimensional word embedding vectors (toy, made-up numbers):
+\[
+    \text{``cat''} = \begin{bmatrix} 2 \\ 3 \end{bmatrix}, \qquad
+    \text{``dog''} = \begin{bmatrix} 2 \\ 2 \end{bmatrix}, \qquad
+    \text{``car''} = \begin{bmatrix} -3 \\ 1 \end{bmatrix}
+\]
+\begin{enumerate}[label=(\alph*)]
+    \item Compute $\text{``cat''} \cdot \text{``dog''}$.
+    \item Compute $\text{``cat''} \cdot \text{``car''}$.
+    \item Which pair is more ``similar'' according to the dot product?
+          Does this match your intuition about the words?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Normalisation and dot products]
+Two vectors:
+\[
+    \vec{p} = \begin{bmatrix} 3 \\ 4 \end{bmatrix}, \qquad
+    \vec{q} = \begin{bmatrix} 0 \\ 5 \end{bmatrix}
+\]
+\begin{enumerate}[label=(\alph*)]
+    \item Compute $\|\vec{p}\| = \sqrt{p_1^2 + p_2^2}$ and $\|\vec{q}\|$.
+    \item Compute $\vec{p} \cdot \vec{q}$.
+    \item Normalise both vectors (divide each by its magnitude) to get
+          $\hat{\vec{p}}$ and $\hat{\vec{q}}$.
+    \item Compute $\hat{\vec{p}} \cdot \hat{\vec{q}}$. This is the \emph{cosine
+          similarity}. Why might cosine similarity be a more useful measure of
+          directional similarity than the raw dot product?
+\end{enumerate}
+\end{exercise}
+
+% ──────────────────────────────────────────────────────────────────────────────
+\section{Matrix Multiplication}
+% ──────────────────────────────────────────────────────────────────────────────
+
+\begin{motivbox}
+\textbf{Why this matters for transformers.}
+The weight matrices $W_Q$, $W_K$, $W_V$, and $W_O$ are all matrices. When a token
+embedding passes through one of these, it is a matrix multiplication. Understanding what
+matrix multiplication does --- and critically, what \emph{shape} the result has --- is
+essential for reading transformer code without getting lost.
+\end{motivbox}
+
+\begin{exercise}[$2 \times 2$ matrix multiplication]
+Compute $AB$ where:
+\[
+    A = \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}, \qquad
+    B = \begin{bmatrix} 5 & 6 \\ 7 & 8 \end{bmatrix}
+\]
+Recall: the entry in row $i$, column $j$ of $AB$ is the dot product of row $i$ of $A$
+with column $j$ of $B$.
+\end{exercise}
+
+\begin{exercise}[Non-square matrix multiplication]
+Compute $AB$ where:
+\[
+    A = \begin{bmatrix} 1 & 0 & 2 \\ 3 & 1 & 1 \end{bmatrix} \quad (2 \times 3), \qquad
+    B = \begin{bmatrix} 1 & 2 \\ 0 & 1 \\ 4 & 0 \end{bmatrix} \quad (3 \times 2)
+\]
+\begin{enumerate}[label=(\alph*)]
+    \item What shape is $AB$?
+    \item Compute $AB$.
+    \item Can you compute $BA$? If yes, what shape is it? If no, why not?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Shape tracking]
+For each of the following, state whether the multiplication is valid and, if so,
+give the shape of the result. You do \textbf{not} need to compute the values.
+\begin{enumerate}[label=(\alph*)]
+    \item $A$ is $(3 \times 4)$, $B$ is $(4 \times 2)$. Compute $AB$.
+    \item $A$ is $(5 \times 3)$, $B$ is $(5 \times 3)$. Compute $AB$.
+    \item $A$ is $(1 \times 6)$ (a row vector), $B$ is $(6 \times 1)$ (a column vector).
+          Compute $AB$.
+    \item $A$ is $(6 \times 1)$, $B$ is $(1 \times 6)$. Compute $AB$.
+          How is this different from~(c)?
+    \item In a transformer, a token embedding $\vec{x}$ has shape $(d_{\mathrm{model}},)$,
+          treated as $(1 \times d_{\mathrm{model}})$. The query weight matrix $W_Q$ has
+          shape $(d_{\mathrm{model}} \times d_{\mathrm{head}})$.
+          What shape is $\vec{x} W_Q$?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[$W_V$ and $W_O$ in miniature]
+In a transformer attention head, $W_V$ maps each token to a ``value'' vector, and
+$W_O$ maps the aggregated value back to the residual stream. Here is a tiny version.
+
+Let:
+\[
+    W_V = \begin{bmatrix} 1 & 0 \\ 0 & 2 \end{bmatrix}, \qquad
+    W_O = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}
+\]
+and let token embedding $\vec{x} = \begin{bmatrix} 3 & 1 \end{bmatrix}$ (a row vector).
+\begin{enumerate}[label=(\alph*)]
+    \item Compute $\vec{v} = \vec{x} W_V$ (the value vector for this token).
+    \item Compute the output $\vec{o} = \vec{v} W_O$.
+    \item What is the combined effect $\vec{x}(W_V W_O)$?
+          Compute $W_V W_O$ first, then multiply by $\vec{x}$.
+    \item Does your answer to~(c) match~(b)? It should --- this is matrix
+          associativity: $(AB)C = A(BC)$.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[The OV circuit]
+This exercise previews one of the key ideas in mechanistic interpretability:
+the \textbf{OV circuit}, which describes what a head \emph{does} to the residual
+stream regardless of what it attends to.
+
+The OV matrix is defined as $W_{OV} = W_V W_O$. Using:
+\[
+    W_V = \begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}, \qquad
+    W_O = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}
+\]
+\begin{enumerate}[label=(\alph*)]
+    \item Compute $W_{OV} = W_V W_O$.
+    \item What does $W_O = I$ (the identity matrix) imply about what $W_O$ is doing?
+    \item Apply $W_{OV}$ to two different token embeddings:
+          $\vec{x}_1 = \begin{bmatrix} 1 & 0 \end{bmatrix}$ and
+          $\vec{x}_2 = \begin{bmatrix} 0 & 1 \end{bmatrix}$.
+          What do you notice about the relationship between input and output?
+\end{enumerate}
+\end{exercise}
+
+% ──────────────────────────────────────────────────────────────────────────────
+\section{Linear Transformations}
+% ──────────────────────────────────────────────────────────────────────────────
+
+\begin{motivbox}
+\textbf{Why this matters for transformers.}
+A matrix is not just an array of numbers --- it is a \emph{function}. When you multiply
+a vector by a matrix, you are applying a linear transformation: stretching, rotating, or
+projecting that vector in space. Every weight matrix in a transformer is doing this to
+token representations. If you can think of matrices as functions, you can think about
+what information they extract or suppress.
+\end{motivbox}
+
+\begin{exercise}[Matrix as function]
+Let $T = \begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}$.
+
+Apply $T$ to each of the following vectors and describe what geometric effect $T$ has:
+\begin{enumerate}[label=(\alph*)]
+    \item $\vec{v} = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$
+    \item $\vec{v} = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$
+    \item $\vec{v} = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$
+    \item In one sentence, what does $T$ do to any 2D vector?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Two matrices, same input]
+Let:
+\[
+    A = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}, \qquad
+    B = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}, \qquad
+    \vec{v} = \begin{bmatrix} 3 \\ 2 \end{bmatrix}
+\]
+\begin{enumerate}[label=(\alph*)]
+    \item Compute $A\vec{v}$. What does $A$ do geometrically?
+    \item Compute $B\vec{v}$. What does $B$ do geometrically?
+    \item These are two different ``lenses'' through which to view the same vector
+          $\vec{v}$. In a transformer, different attention heads apply different
+          $W_Q, W_K, W_V$ matrices to the same token --- they are asking different
+          questions about the same information. Does this analogy feel concrete now?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Matrix multiplication as function composition]
+Let $f(\vec{v}) = A\vec{v}$ and $g(\vec{v}) = B\vec{v}$ where:
+\[
+    A = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}, \qquad
+    B = \begin{bmatrix} 2 & 0 \\ 0 & 2 \end{bmatrix}, \qquad
+    \vec{v} = \begin{bmatrix} 1 \\ 2 \end{bmatrix}
+\]
+\begin{enumerate}[label=(\alph*)]
+    \item Compute $f(\vec{v}) = A\vec{v}$.
+    \item Compute $g(f(\vec{v})) = B(A\vec{v})$ by applying $B$ to your answer from~(a).
+    \item Now compute $C = BA$ directly.
+    \item Compute $C\vec{v}$.
+    \item Do (b) and (d) agree? They should --- matrix multiplication \emph{is} function
+          composition: applying $A$ then $B$ is identical to applying the single matrix
+          $BA$.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Projections]
+A projection matrix onto the $x$-axis is:
+\[
+    P = \begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix}
+\]
+\begin{enumerate}[label=(\alph*)]
+    \item Apply $P$ to $\vec{v} = \begin{bmatrix} 4 \\ 7 \end{bmatrix}$.
+          What information is lost?
+    \item Apply $P$ twice: compute $P(P\vec{v})$. What do you notice?
+    \item A matrix $M$ satisfying $M^2 = M$ is called \textbf{idempotent}. Verify that
+          $P^2 = P$. Why does this make sense geometrically?
+          (Projecting something already projected should do nothing.)
+    \item In transformers, the residual stream means that information is \emph{added to}
+          (not replaced by) the stream. How is this different from applying a projection?
+\end{enumerate}
+\end{exercise}
+
+% ──────────────────────────────────────────────────────────────────────────────
+\section{Attention Scores by Hand}
+% ──────────────────────────────────────────────────────────────────────────────
+
+\begin{motivbox}
+\textbf{Why this matters.}
+This is the core computation. In a transformer attention head, each token generates a
+\textbf{query} (what am I looking for?) and a \textbf{key} (what do I offer?). The
+attention score between token $i$ and token $j$ is the dot product of token $i$'s query
+with token $j$'s key, scaled and softmaxed. Working through this by hand makes the
+formula completely concrete.
+
+The full formula for attention is:
+\[
+    \mathrm{Attention}(Q, K, V) =
+    \mathrm{softmax}\!\left(\frac{QK^T}{\sqrt{d_{\mathrm{head}}}}\right) V
+\]
+In this section you will compute the $QK^T / \sqrt{d_{\mathrm{head}}}$ part and the
+softmax. We use $d_{\mathrm{head}} = 2$ throughout.
+\end{motivbox}
+
+\begin{exercise}[Computing Q and K vectors]
+Suppose we have a 3-token sequence. The token embeddings (already 2D for simplicity) are:
+\[
+    \vec{x}_1 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}, \qquad
+    \vec{x}_2 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}, \qquad
+    \vec{x}_3 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}
+\]
+The query and key weight matrices are:
+\[
+    W_Q = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}, \qquad
+    W_K = \begin{bmatrix} 2 & 0 \\ 0 & 1 \end{bmatrix}
+\]
+\begin{enumerate}[label=(\alph*)]
+    \item Compute the query vectors $\vec{q}_i = \vec{x}_i^T W_Q$ for $i = 1, 2, 3$.
+    \item Compute the key vectors $\vec{k}_i = \vec{x}_i^T W_K$ for $i = 1, 2, 3$.
+\end{enumerate}
+\textit{Note:} We write embeddings as row vectors and multiply $\vec{x}^T W$ rather than
+$W^T \vec{x}$ --- this matches the convention used in ARENA and most transformer
+implementations.
+\end{exercise}
+
+\begin{exercise}[Raw attention scores]
+Using your $Q$ and $K$ vectors from Exercise~4.1:
+\begin{enumerate}[label=(\alph*)]
+    \item Compute the raw attention score $s_{ij} = \vec{q}_i \cdot \vec{k}_j$ for every
+          pair $(i, j)$ where $i, j \in \{1, 2, 3\}$. Fill in this $3 \times 3$ table:
+
+\medskip
+\begin{center}
+\begin{tabular}{c|ccc}
+\toprule
+          & $\vec{k}_1$ & $\vec{k}_2$ & $\vec{k}_3$ \\
+\midrule
+$\vec{q}_1$ & $s_{11}$ & $s_{12}$ & $s_{13}$ \\
+$\vec{q}_2$ & $s_{21}$ & $s_{22}$ & $s_{23}$ \\
+$\vec{q}_3$ & $s_{31}$ & $s_{32}$ & $s_{33}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\medskip
+
+    \item Write the full attention score matrix $S$ ($3 \times 3$).
+    \item Row $i$ of $S$ contains the scores for token $i$ attending to every other
+          token. Which token does token~3 most ``want to attend to'' based on raw scores?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Scaling and softmax]
+\textbf{Step 1: Scale.}
+Divide every entry in your score matrix $S$ by
+$\sqrt{d_{\mathrm{head}}} = \sqrt{2} \approx 1.414$.
+Call the result $\tilde{S}$. (Round to 2 decimal places.)
+
+\medskip
+\textbf{Step 2: Softmax.}
+The softmax of a row vector $\vec{z} = [z_1, z_2, \ldots, z_n]$ is:
+\[
+    \mathrm{softmax}(\vec{z})_i = \frac{e^{z_i}}{\displaystyle\sum_j e^{z_j}}
+\]
+Apply softmax to each row of $\tilde{S}$ independently. This gives the
+\textbf{attention pattern} $A$ --- a $3 \times 3$ matrix where each row sums to~1.
+
+\medskip
+Useful values:
+$e^0 \approx 1.000$,\;
+$e^{0.71} \approx 2.034$,\;
+$e^{1.41} \approx 4.096$,\;
+$e^{2.12} \approx 8.331$.
+
+\begin{enumerate}[label=(\alph*)]
+    \item Compute the scaled scores for row~1 (token~1's query against all keys).
+    \item Apply softmax to row~1. Verify it sums to~1.
+    \item Apply softmax to row~3 (you can leave row~2 as an exercise if time is short).
+    \item Interpret the attention pattern: what is token~1 ``attending to''?
+          What is token~3 ``attending to''?
+\end{enumerate}
+\end{exercise}
+
+% ──────────────────────────────────────────────────────────────────────────────
+\section{Tensor Shapes and Einsum Notation}
+% ──────────────────────────────────────────────────────────────────────────────
+
+\begin{motivbox}
+\textbf{Why this matters.}
+Modern transformer code uses \code{einops.einsum} and \code{torch.einsum} extensively
+because they make the intention of each operation explicit via index notation. Being able
+to read an einsum string and immediately know the input/output shapes --- and what
+computation is happening --- is a superpower when reading or debugging transformer code.
+The ARENA curriculum uses these constantly.
+
+\textbf{How to read einsum notation.} Each letter is a dimension. A letter appearing in
+both inputs is \emph{summed over} (contracted). A letter appearing in the output is
+\emph{kept}. Shapes must be consistent: the same letter must have the same size everywhere
+it appears.
+\end{motivbox}
+
+\begin{exercise}[Basic einsum interpretation]
+For each einsum expression, state: (i) what each letter represents, (ii) the shapes of
+the inputs, (iii) the shape of the output, and (iv) in plain English, what operation is
+being performed.
+
+\begin{enumerate}[label=(\alph*)]
+    \item \code{"i, i -> "} applied to tensors \code{A} and \code{B} where \code{A}
+          has shape \code{(4,)} and \code{B} has shape \code{(4,)}.
+
+    \item \code{"i j, j k -> i k"} where \code{A} has shape \code{(3, 4)} and \code{B}
+          has shape \code{(4, 5)}.
+
+    \item \code{"b i j, b j k -> b i k"} where \code{A} has shape \code{(8, 3, 4)} and
+          \code{B} has shape \code{(8, 4, 5)}.
+          (\code{b} is the batch dimension.)
+
+    \item \code{"i j -> j i"} where \code{A} has shape \code{(3, 7)}.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Shape consistency check]
+For each of the following, identify the error (if any) in the einsum expression given
+the tensor shapes:
+\begin{enumerate}[label=(\alph*)]
+    \item \code{"i j, i k -> j k"} with \code{A} shape \code{(3, 4)} and \code{B}
+          shape \code{(3, 5)}.
+    \item \code{"i j, j k -> i k"} with \code{A} shape \code{(3, 4)} and \code{B}
+          shape \code{(5, 2)}.
+    \item \code{"i j k, i j -> i k"} with \code{A} shape \code{(2, 3, 4)} and \code{B}
+          shape \code{(2, 3)}.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[The ARENA 1.3 einsum]
+The following einsum appears in ARENA exercise~1.3 for computing attention scores:
+\begin{center}
+\code{einops.einsum(Q, K, "seqQ n h, seqK n h -> n seqQ seqK")}
+\end{center}
+where the variables have these meanings:
+\begin{itemize}
+    \item \code{seqQ}: number of query positions (sequence length)
+    \item \code{seqK}: number of key positions (same value as \code{seqQ} in
+          self-attention)
+    \item \code{n}: number of attention heads
+    \item \code{h}: head dimension ($d_{\mathrm{head}}$)
+\end{itemize}
+\begin{enumerate}[label=(\alph*)]
+    \item What are the shapes of \code{Q} and \code{K}?
+    \item What is the shape of the output?
+    \item Which dimension is being summed over (contracted)? What does summing over
+          \code{h} correspond to mathematically?
+    \item What does entry \code{[n, i, j]} of the output tensor represent?
+    \item Why is \code{n} in the output rather than contracted? What would it mean if we
+          had written \code{"seqQ n h, seqK n h -> seqQ seqK"} instead?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Writing your own einsum]
+Write the einsum string for each of the following operations:
+\begin{enumerate}[label=(\alph*)]
+    \item Standard (non-batched) matrix multiplication of \code{A} (shape $m \times n$)
+          with \code{B} (shape $n \times p$) to get output of shape $m \times p$.
+
+    \item For each token in a sequence, compute the dot product of that token's vector
+          with a fixed vector \code{w}. Input: \code{X} of shape \code{(seq, d)},
+          \code{w} of shape \code{(d,)}. Output shape: \code{(seq,)}.
+
+    \item Compute the outer product of two vectors \code{u} of shape \code{(m,)} and
+          \code{v} of shape \code{(n,)} to get a matrix of shape \code{(m, n)}.
+
+    \item \textbf{Challenge.} You have value vectors \code{V} of shape
+          \code{(seqK, n, h)} and an attention pattern \code{A} of shape
+          \code{(n, seqQ, seqK)}. Write the einsum that computes the weighted sum of
+          values for each query position and head. Output shape: \code{(seqQ, n, h)}.
+\end{enumerate}
+\end{exercise}
+
+% ──────────────────────────────────────────────────────────────────────────────
+\newpage
+\section*{Worked Solutions}
+\label{sec:solutions}
+\addcontentsline{toc}{section}{Worked Solutions}
+% ──────────────────────────────────────────────────────────────────────────────
+
+\setcounter{section}{1}
+\setcounter{solution}{0}
+
+% --- Section 1 Solutions ---
+\subsection*{Section 1: Vectors and Dot Products}
+
+\begin{solution}[Basic dot product (2D)]
+\[
+    \vec{a} \cdot \vec{b} = (3)(2) + (1)(4) = 6 + 4 = \mathbf{10}
+\]
+\end{solution}
+
+\begin{solution}[Basic dot product (3D)]
+\[
+    \vec{u} \cdot \vec{v} = (1)(4) + (-2)(1) + (3)(2) = 4 - 2 + 6 = \mathbf{8}
+\]
+\end{solution}
+
+\begin{solution}[Geometric interpretation]
+\begin{enumerate}[label=(\alph*)]
+    \item $\theta = 0^{\circ}$, so $\cos\theta = 1$. Dot product is \textbf{positive}.
+          Vectors pointing the same way are maximally aligned.
+    \item $\theta = 180^{\circ}$, so $\cos\theta = -1$. Dot product is \textbf{negative}.
+          The vectors point in completely opposite directions.
+    \item $\theta = 90^{\circ}$, so $\cos\theta = 0$. Dot product is \textbf{zero}.
+          Orthogonal vectors share no directional component.
+    \item The dot product of the long and short vector is \textbf{larger}, because
+          $\|\vec{a}\|\|\vec{b}\|\cos\theta$ scales with magnitude. The raw dot
+          product conflates direction and magnitude --- which is why cosine similarity
+          (see Exercise~1.5) is often preferred.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Dot product as similarity]
+\begin{enumerate}[label=(\alph*)]
+    \item $\text{``cat''} \cdot \text{``dog''} = (2)(2) + (3)(2) = 4 + 6 = \mathbf{10}$
+    \item $\text{``cat''} \cdot \text{``car''} = (2)(-3) + (3)(1) = -6 + 3 = \mathbf{-3}$
+    \item ``cat'' and ``dog'' are more similar by dot product (10 vs.\ $-3$). This matches
+          intuition: both are animals/pets, while ``car'' is unrelated.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Normalisation and dot products]
+\begin{enumerate}[label=(\alph*)]
+    \item $\|\vec{p}\| = \sqrt{9+16} = \sqrt{25} = 5$. \quad $\|\vec{q}\| = \sqrt{0+25} = 5$.
+    \item $\vec{p} \cdot \vec{q} = (3)(0) + (4)(5) = 20$.
+    \item $\hat{\vec{p}} = \begin{bmatrix} 3/5 \\ 4/5 \end{bmatrix}$, \quad
+          $\hat{\vec{q}} = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$.
+    \item $\hat{\vec{p}} \cdot \hat{\vec{q}} = (3/5)(0) + (4/5)(1) = 4/5 = 0.8$.
+
+          Cosine similarity removes the effect of vector length, measuring only the
+          \emph{angle} between directions. Two vectors can have a large raw dot product
+          simply because they are long, even if they point in very different directions.
+          Cosine similarity gives a value in $[-1, 1]$ that purely reflects directional
+          alignment.
+\end{enumerate}
+\end{solution}
+
+\setcounter{section}{2}
+\setcounter{solution}{0}
+
+% --- Section 2 Solutions ---
+\subsection*{Section 2: Matrix Multiplication}
+
+\begin{solution}[$2 \times 2$ matrix multiplication]
+\[
+    AB = \begin{bmatrix} (1)(5)+(2)(7) & (1)(6)+(2)(8) \\ (3)(5)+(4)(7) & (3)(6)+(4)(8) \end{bmatrix}
+       = \begin{bmatrix} 19 & 22 \\ 43 & 50 \end{bmatrix}
+\]
+\end{solution}
+
+\begin{solution}[Non-square matrix multiplication]
+\begin{enumerate}[label=(\alph*)]
+    \item $A$ is $2 \times 3$, $B$ is $3 \times 2$. Inner dimensions match, so $AB$
+          has shape $\mathbf{2 \times 2}$.
+    \item
+\[
+    AB = \begin{bmatrix}
+        (1)(1)+(0)(0)+(2)(4) & (1)(2)+(0)(1)+(2)(0) \\
+        (3)(1)+(1)(0)+(1)(4) & (3)(2)+(1)(1)+(1)(0)
+    \end{bmatrix}
+    = \begin{bmatrix} 9 & 2 \\ 7 & 7 \end{bmatrix}
+\]
+    \item Yes, $BA$ is valid: $B$ is $3 \times 2$, $A$ is $2 \times 3$, so $BA$ has
+          shape $\mathbf{3 \times 3}$.
+\[
+    BA = \begin{bmatrix} 7 & 2 & 4 \\ 3 & 1 & 1 \\ 4 & 0 & 8 \end{bmatrix}
+\]
+Note: $AB \neq BA$ in general, and they don't even have the same shape here.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Shape tracking]
+\begin{enumerate}[label=(\alph*)]
+    \item Valid. Output shape: $\mathbf{(3 \times 2)}$.
+    \item \textbf{Not valid.} Inner dimensions: 3 (from $A$) does not match 5 (from $B$).
+    \item Valid. $(1 \times 6)(6 \times 1)$. Output shape: $\mathbf{(1 \times 1)}$ --- a
+          scalar. This is a dot product.
+    \item Valid. $(6 \times 1)(1 \times 6)$. Output shape: $\mathbf{(6 \times 6)}$ --- an
+          outer product, a full matrix.
+    \item $(1 \times d_{\mathrm{model}})(d_{\mathrm{model}} \times d_{\mathrm{head}})
+          = \mathbf{(1 \times d_{\mathrm{head}})}$. The query vector for this token has
+          $d_{\mathrm{head}}$ dimensions.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[$W_V$ and $W_O$ in miniature]
+\begin{enumerate}[label=(\alph*)]
+    \item $\vec{v} = \vec{x} W_V
+          = \begin{bmatrix} 3 & 1 \end{bmatrix}
+            \begin{bmatrix} 1 & 0 \\ 0 & 2 \end{bmatrix}
+          = \begin{bmatrix} 3 & 2 \end{bmatrix}$
+
+    \item $\vec{o} = \vec{v} W_O
+          = \begin{bmatrix} 3 & 2 \end{bmatrix}
+            \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}
+          = \begin{bmatrix} 2 & 3 \end{bmatrix}$
+
+    \item First, $W_V W_O =
+          \begin{bmatrix} 1 & 0 \\ 0 & 2 \end{bmatrix}
+          \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}
+          = \begin{bmatrix} 0 & 1 \\ 2 & 0 \end{bmatrix}$
+
+          Then $\vec{x}(W_V W_O) =
+          \begin{bmatrix} 3 & 1 \end{bmatrix}
+          \begin{bmatrix} 0 & 1 \\ 2 & 0 \end{bmatrix}
+          = \begin{bmatrix} 2 & 3 \end{bmatrix}$
+
+    \item Yes --- both give $\begin{bmatrix} 2 & 3 \end{bmatrix}$. Associativity holds:
+          $(\vec{x} W_V) W_O = \vec{x}(W_V W_O)$.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[The OV circuit]
+\begin{enumerate}[label=(\alph*)]
+    \item $W_{OV} = W_V W_O
+          = \begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}
+            \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}
+          = \begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}$
+
+    \item $W_O = I$ means $W_O$ does nothing. In this case $W_{OV} = W_V$ exactly.
+          In practice $W_O \neq I$, and the composition $W_V W_O$ determines what
+          information each head writes back to the residual stream.
+
+    \item $\vec{x}_1 W_{OV}
+          = \begin{bmatrix} 1 & 0 \end{bmatrix}
+            \begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}
+          = \begin{bmatrix} 2 & 1 \end{bmatrix}$
+
+          $\vec{x}_2 W_{OV}
+          = \begin{bmatrix} 0 & 1 \end{bmatrix}
+            \begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}
+          = \begin{bmatrix} 0 & 3 \end{bmatrix}$
+
+          The OV matrix consistently transforms the input: the first basis direction maps
+          to $[2, 1]$ and the second to $[0, 3]$. The OV circuit tells you \emph{what the
+          head writes} into the residual stream when it attends to a given token ---
+          independent of \emph{where} it attends.
+\end{enumerate}
+\end{solution}
+
+\setcounter{section}{3}
+\setcounter{solution}{0}
+
+% --- Section 3 Solutions ---
+\subsection*{Section 3: Linear Transformations}
+
+\begin{solution}[Matrix as function]
+\begin{enumerate}[label=(\alph*)]
+    \item $T\begin{bmatrix}1\\0\end{bmatrix} = \begin{bmatrix}2\\0\end{bmatrix}$ ---
+          stretched by 2 in the $x$-direction.
+    \item $T\begin{bmatrix}0\\1\end{bmatrix} = \begin{bmatrix}0\\3\end{bmatrix}$ ---
+          stretched by 3 in the $y$-direction.
+    \item $T\begin{bmatrix}1\\1\end{bmatrix} = \begin{bmatrix}2\\3\end{bmatrix}$ ---
+          stretched by 2 in $x$ and 3 in $y$ simultaneously.
+    \item $T$ is a \textbf{scaling transformation}: it stretches the $x$-axis by factor~2
+          and the $y$-axis by factor~3, independently.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Two matrices, same input]
+\begin{enumerate}[label=(\alph*)]
+    \item $A\vec{v} = \begin{bmatrix}1&0\\0&-1\end{bmatrix}\begin{bmatrix}3\\2\end{bmatrix}
+          = \begin{bmatrix}3\\-2\end{bmatrix}$.
+          $A$ \textbf{reflects} across the $x$-axis (negates the $y$-component).
+    \item $B\vec{v} = \begin{bmatrix}0&1\\1&0\end{bmatrix}\begin{bmatrix}3\\2\end{bmatrix}
+          = \begin{bmatrix}2\\3\end{bmatrix}$.
+          $B$ \textbf{swaps} the $x$ and $y$ components --- a reflection across the
+          diagonal.
+    \item This is the key intuition: different weight matrices ask different questions
+          about the same token vector. One head might be looking for ``is this a noun?''
+          while another looks for ``is this at the start of a phrase?'' --- all operating
+          on the same residual stream vector.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Matrix multiplication as function composition]
+\begin{enumerate}[label=(\alph*)]
+    \item $A\vec{v} = \begin{bmatrix}1&1\\0&1\end{bmatrix}\begin{bmatrix}1\\2\end{bmatrix}
+          = \begin{bmatrix}3\\2\end{bmatrix}$
+    \item $B(A\vec{v}) = \begin{bmatrix}2&0\\0&2\end{bmatrix}\begin{bmatrix}3\\2\end{bmatrix}
+          = \begin{bmatrix}6\\4\end{bmatrix}$
+    \item $C = BA = \begin{bmatrix}2&0\\0&2\end{bmatrix}\begin{bmatrix}1&1\\0&1\end{bmatrix}
+          = \begin{bmatrix}2&2\\0&2\end{bmatrix}$
+    \item $C\vec{v} = \begin{bmatrix}2&2\\0&2\end{bmatrix}\begin{bmatrix}1\\2\end{bmatrix}
+          = \begin{bmatrix}6\\4\end{bmatrix}$
+    \item Yes, both give $\begin{bmatrix}6\\4\end{bmatrix}$. Applying $A$ then $B$ is the
+          same as applying the single matrix $C = BA$. This is why the OV circuit
+          ($W_V W_O$) can be analysed as a single matrix.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Projections]
+\begin{enumerate}[label=(\alph*)]
+    \item $P\vec{v} = \begin{bmatrix}1&0\\0&0\end{bmatrix}\begin{bmatrix}4\\7\end{bmatrix}
+          = \begin{bmatrix}4\\0\end{bmatrix}$. The $y$-component (7) is lost and cannot
+          be recovered.
+    \item $P(P\vec{v}) = P\begin{bmatrix}4\\0\end{bmatrix} = \begin{bmatrix}4\\0\end{bmatrix}$.
+          Projecting again does nothing.
+    \item $P^2 = PP = \begin{bmatrix}1&0\\0&0\end{bmatrix}\begin{bmatrix}1&0\\0&0\end{bmatrix}
+          = \begin{bmatrix}1&0\\0&0\end{bmatrix} = P$. Geometrically: once a vector is
+          on the $x$-axis, projecting it onto the $x$-axis again leaves it exactly where
+          it is.
+    \item The residual stream uses \textbf{addition}
+          ($\vec{x}_{\mathrm{new}} = \vec{x} + \Delta\vec{x}$), not replacement.
+          Nothing is discarded --- each layer adds information to the stream. A projection
+          destroys information; the residual connection preserves it.
+\end{enumerate}
+\end{solution}
+
+\setcounter{section}{4}
+\setcounter{solution}{0}
+
+% --- Section 4 Solutions ---
+\subsection*{Section 4: Attention Scores by Hand}
+
+\begin{solution}[Computing Q and K vectors]
+Since $W_Q = I$ (the identity), query vectors equal the embeddings:
+\[
+    \vec{q}_1 = \begin{bmatrix}1 & 0\end{bmatrix}, \quad
+    \vec{q}_2 = \begin{bmatrix}0 & 1\end{bmatrix}, \quad
+    \vec{q}_3 = \begin{bmatrix}1 & 1\end{bmatrix}
+\]
+For keys, $W_K$ doubles the first component:
+\[
+    \vec{k}_1 = \begin{bmatrix}1&0\end{bmatrix}W_K = \begin{bmatrix}2&0\end{bmatrix}, \quad
+    \vec{k}_2 = \begin{bmatrix}0&1\end{bmatrix}W_K = \begin{bmatrix}0&1\end{bmatrix}, \quad
+    \vec{k}_3 = \begin{bmatrix}1&1\end{bmatrix}W_K = \begin{bmatrix}2&1\end{bmatrix}
+\]
+\end{solution}
+
+\begin{solution}[Raw attention scores]
+Computing $s_{ij} = \vec{q}_i \cdot \vec{k}_j$:
+\[
+    S = \begin{bmatrix} 2 & 0 & 2 \\ 0 & 1 & 1 \\ 2 & 1 & 3 \end{bmatrix}
+\]
+Row~3 is $[2, 1, 3]$. The highest score is $s_{33} = 3$, so token~3 most strongly
+attends to \textbf{token~3} (itself).
+\end{solution}
+
+\begin{solution}[Scaling and softmax]
+\textbf{Step 1:} Scale by $1/\sqrt{2} \approx 0.707$:
+\[
+    \tilde{S} = \begin{bmatrix} 1.41 & 0 & 1.41 \\ 0 & 0.71 & 0.71 \\ 1.41 & 0.71 & 2.12 \end{bmatrix}
+\]
+
+\begin{enumerate}[label=(\alph*)]
+    \item Row~1 scaled scores: $[1.41,\ 0,\ 1.41]$.
+    \item Exponentiate: $e^{1.41} \approx 4.096$, $e^0 = 1.000$, $e^{1.41} \approx 4.096$.
+          Sum $= 9.192$.
+\[
+    A_{1,\cdot} = \left[\frac{4.096}{9.192},\ \frac{1.000}{9.192},\ \frac{4.096}{9.192}\right]
+               \approx [0.446,\ 0.109,\ 0.446]
+\]
+Sum check: $0.446 + 0.109 + 0.446 \approx 1.0$. \checkmark
+
+    \item Row~3 scaled scores: $[1.41,\ 0.71,\ 2.12]$.
+          Exponentiate: $4.096,\ 2.034,\ 8.331$. Sum $= 14.461$.
+\[
+    A_{3,\cdot} \approx [0.283,\ 0.141,\ 0.576]
+\]
+
+    \item \textbf{Interpretation:}
+          Token~1 splits its attention equally between itself and token~3 (both $\approx$44.6\%),
+          largely ignoring token~2 ($\approx$10.9\%) --- because token~1's query has only a
+          first component, and tokens~1 and~3 both have large first components in their keys.
+          Token~3 attends most strongly to itself ($\approx$57.6\%), moderately to token~1
+          ($\approx$28.3\%), and least to token~2 ($\approx$14.1\%).
+\end{enumerate}
+\end{solution}
+
+\setcounter{section}{5}
+\setcounter{solution}{0}
+
+% --- Section 5 Solutions ---
+\subsection*{Section 5: Tensor Shapes and Einsum Notation}
+
+\begin{solution}[Basic einsum interpretation]
+\begin{enumerate}[label=(\alph*)]
+    \item \code{"i, i -> "}: both inputs shape \code{(4,)}, output scalar \code{()}.
+          \textbf{Dot product.} Index \code{i} is contracted.
+    \item \code{"i j, j k -> i k"}: \code{A} is \code{(3,4)}, \code{B} is \code{(4,5)},
+          output \code{(3,5)}. \textbf{Standard matrix multiplication.}
+    \item \code{"b i j, b j k -> b i k"}: \code{A} is \code{(8,3,4)}, \code{B} is
+          \code{(8,4,5)}, output \code{(8,3,5)}. \textbf{Batched matrix multiplication} ---
+          8 independent matrix multiplications run simultaneously.
+    \item \code{"i j -> j i"}: input \code{(3,7)}, output \code{(7,3)}. \textbf{Transpose.}
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Shape consistency check]
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{Valid --- no error.} \code{i = 3} is contracted, \code{j = 4} and
+          \code{k = 5} are kept. Output: \code{(4, 5)}. Computes $A^T B$.
+    \item \textbf{Error.} Index \code{j} is 4 in \code{A} but 5 in \code{B}. The inner
+          dimensions don't align.
+    \item \textbf{Valid --- no error.} \code{j = 3} is contracted. Output: \code{(2, 4)}.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[The ARENA 1.3 einsum]
+\begin{enumerate}[label=(\alph*)]
+    \item \code{Q} has shape \code{(seqQ, n, h)} and \code{K} has shape
+          \code{(seqK, n, h)}.
+    \item Output shape: \code{(n, seqQ, seqK)}.
+    \item \code{h} is contracted. Summing over \code{h} computes the \textbf{dot product}
+          in the head dimension: for fixed head \code{n}, query position~$i$, and key
+          position~$j$, the output is $\sum_{h} Q[i,n,h] \times K[j,n,h]$ --- exactly
+          $\vec{q}_{i,n} \cdot \vec{k}_{j,n}$.
+    \item Entry \code{[n, i, j]} is the \textbf{raw attention score} for head~\code{n}:
+          the dot product of query at position~$i$ with key at position~$j$. After
+          dividing by $\sqrt{d_{\mathrm{head}}}$ and softmaxing, this becomes the
+          attention weight.
+    \item \code{n} is kept because each head computes its own independent attention
+          pattern. Writing \code{"seqQ n h, seqK n h -> seqQ seqK"} would sum over
+          both \code{n} and \code{h}, collapsing all heads into a single score matrix
+          --- destroying the multi-head structure entirely.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Writing your own einsum]
+\begin{enumerate}[label=(\alph*)]
+    \item \code{"m n, n p -> m p"}
+    \item \code{"s d, d -> s"}
+    \item \code{"m, n -> m n"} (no indices contracted --- both appear in only one input)
+    \item \code{"seqK n h, n seqQ seqK -> seqQ n h"} \\
+          \code{seqK} is contracted (the weighted average). \code{n}, \code{seqQ}, and
+          \code{h} are kept. For each query position and head, this computes the weighted
+          combination of value vectors.
+\end{enumerate}
+\end{solution}
+
+\end{document}

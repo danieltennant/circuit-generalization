@@ -4,6 +4,14 @@
 
 ---
 
+## 2026-03-28
+
+Generated a pencil-and-paper linear algebra exercise set (`resources/linear_algebra_for_mech_interp.pdf`) — 21 exercises across 5 sections with worked solutions, formatted in paper-style LaTeX. Sections cover vectors and dot products, matrix multiplication, linear transformations, attention scores by hand (full $QK^T/\sqrt{d}$ + softmax walkthrough), and einsum notation. Compiled with tectonic. The goal is to build intuition for the notation in the Math Framework paper before going deeper into ARENA.
+
+Also added a Week 1.5 math foundations sprint to the research plan, inserting a focused week between the initial environment setup and the induction heads work. Resources for that week: Illustrated Transformer, Andrej Karpathy's "Let's build GPT from scratch," 3Blue1Brown Essence of Linear Algebra (priority episodes), 80k Hours Neel Nanda (pulled forward), and AXRP Ep. 14.
+
+---
+
 ## 2026-03-26
 
 Worked through the key concepts of the Math Framework paper (Elhage 2021) via Q&A: residual stream as communication channel, virtual weights, attention heads as independent and additive, OV/QK circuit decomposition, path expansion trick, skip-trigrams. Concepts are landing but linear algebra notation is a friction point — added 3Blue1Brown Essence of Linear Algebra as an optional refresher before continuing with the paper.
