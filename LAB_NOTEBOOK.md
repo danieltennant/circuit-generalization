@@ -4,6 +4,12 @@
 
 ---
 
+## 2026-03-29
+
+Finished reading the Math Framework paper (Elhage 2021) through the one-layer attention-only transformers section — covering zero-layer transformers, bigram statistics, and the full one-layer model including QK and OV circuit decomposition. Q&A session to clarify concepts: logits and the logit lens, softmax, Hadamard product (⊙), low-rank structure of the QK matrix and its implications for circuit analysis, and autoregressive (causal) masking. Linear algebra foundations from Week 1.5 are paying off — notation friction is significantly lower than the first pass through the paper.
+
+---
+
 ## 2026-03-28
 
 Generated a pencil-and-paper linear algebra exercise set (`resources/linear_algebra_for_mech_interp.pdf`) — 21 exercises across 5 sections with worked solutions, formatted in paper-style LaTeX. Sections cover vectors and dot products, matrix multiplication, linear transformations, attention scores by hand (full $QK^T/\sqrt{d}$ + softmax walkthrough), and einsum notation. Compiled with tectonic. The goal is to build intuition for the notation in the Math Framework paper before going deeper into ARENA.
