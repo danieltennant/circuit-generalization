@@ -6,6 +6,8 @@
 
 ## 2026-03-29
 
+PR [callummcdougall/ARENA_3.0#295](https://github.com/callummcdougall/ARENA_3.0/pull/295) was accepted and merged. A small fix — replacing a deprecated `pkg_resources` call — but it's a tangible first contribution to the mech interp ecosystem. Nice milestone.
+
 Finished reading the Math Framework paper (Elhage 2021) through the one-layer attention-only transformers section — covering zero-layer transformers, bigram statistics, and the full one-layer model including QK and OV circuit decomposition. Q&A session to clarify concepts: logits and the logit lens, softmax, Hadamard product (⊙), low-rank structure of the QK matrix and its implications for circuit analysis, and autoregressive (causal) masking. Linear algebra foundations from Week 1.5 are paying off — notation friction is significantly lower than the first pass through the paper.
 
 ---
@@ -48,9 +50,9 @@ Created `w01-residual-stream.ipynb` — covers loading GPT-2 Small via HookedTra
 ## 2026-03-22 — Week 1 Plan
 
 - [x] Listen: [80k Hours Ep. 107 — Chris Olah](https://80000hours.org/podcast/episodes/chris-olah-interpretability-research/)
-- [ ] Read: [A Mathematical Framework for Transformer Circuits](https://transformer-circuits.pub/2021/framework/index.html) — Elhage 2021, sections 1–4 (residual stream, QK circuit, OV circuit, virtual attention heads)
+- [x] Read: [A Mathematical Framework for Transformer Circuits](https://transformer-circuits.pub/2021/framework/index.html) — Elhage 2021, sections 1–4 (residual stream, QK circuit, OV circuit, virtual attention heads)
 - [ ] **Optional linear algebra refresher:** [3Blue1Brown — Essence of Linear Algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) (~3 hrs total) — covers matrix multiplication, linear transformations, dot products, subspaces, and eigenvalues; useful for making the paper's notation feel concrete rather than abstract
-- [ ] [ARENA exercises 1.1–1.3](https://github.com/callummcdougall/ARENA_3.0/blob/main/chapter1_transformer_interp/exercises/part2_intro_to_mech_interp/1.2_Intro_to_Mech_Interp_exercises.ipynb)
+- [x] [ARENA exercises 1.1–1.3](https://github.com/callummcdougall/ARENA_3.0/blob/main/chapter1_transformer_interp/exercises/part2_intro_to_mech_interp/1.2_Intro_to_Mech_Interp_exercises.ipynb)
 - [x] Create Week 1 notebook: load GPT-2 Small, inspect residual stream norms, decompose attention vs MLP contributions
 - [ ] Execute notebook, review plots, and fill in reflection cell
 
