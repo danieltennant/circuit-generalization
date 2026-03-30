@@ -8,7 +8,7 @@
 
 PR [callummcdougall/ARENA_3.0#295](https://github.com/callummcdougall/ARENA_3.0/pull/295) was accepted and merged. A small fix — replacing a deprecated `pkg_resources` call — but it's a tangible first contribution to the mech interp ecosystem. Nice milestone.
 
-Finished reading the Math Framework paper (Elhage 2021) through the one-layer attention-only transformers section — covering zero-layer transformers, bigram statistics, and the full one-layer model including QK and OV circuit decomposition. Q&A session to clarify concepts: logits and the logit lens, softmax, Hadamard product (⊙), low-rank structure of the QK matrix and its implications for circuit analysis, and autoregressive (causal) masking. Linear algebra foundations from Week 1.5 are paying off — notation friction is significantly lower than the first pass through the paper.
+Finished reading the Math Framework paper (Elhage 2021) through the one-layer attention-only transformers section — covering zero-layer transformers, bigram statistics, and the full one-layer model including QK and OV circuit decomposition. Q&A session to clarify concepts: logits and the logit lens, softmax, tensor product (⊗), low-rank structure of the QK matrix and its implications for circuit analysis, and autoregressive (causal) masking. Linear algebra foundations from Week 1.5 are paying off — notation friction is significantly lower than the first pass through the paper.
 
 ---
 
