@@ -4,6 +4,12 @@
 
 ---
 
+## 2026-03-29 — Week 1 notebook
+
+Executed `w01-residual-stream.ipynb` and completed the reflection cell. Core concepts landed well: correctly identified the three residual stream dimensions (batch, position, d_model) and noted that mean norm grows across layers. Missed that the `<|endoftext|>` BOS token at position 0 is the real norm outlier — norm climbs to ~3000 by layer 9 while content tokens stay in the 50–175 range, a known GPT-2 quirk where the BOS token acts as a garbage collector for unplaced information. Also noted the L11 attention dominance but wasn't sure what to make of it — likely the final layer doing contextual assembly before unembedding, while earlier MLP-heavy layers handle lookup-style computation. Prediction quality observation was accurate: nothing surprising, with " over" → " the" at 34% being the standout.
+
+---
+
 ## 2026-03-29
 
 PR [callummcdougall/ARENA_3.0#295](https://github.com/callummcdougall/ARENA_3.0/pull/295) was accepted and merged. A small fix — replacing a deprecated `pkg_resources` call — but it's a tangible first contribution to the mech interp ecosystem. Nice milestone.
