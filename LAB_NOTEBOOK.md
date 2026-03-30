@@ -4,6 +4,18 @@
 
 ---
 
+## 2026-03-30 — Week 2 Plan (Math & Transformer Foundations)
+
+- [ ] Listen: [80k Hours — Neel Nanda on Mechanistic Interpretability](https://80000hours.org/podcast/episodes/neel-nanda-mechanistic-interpretability/) (~3 hrs, commute-friendly)
+- [ ] Listen: [AXRP Ep. 14 — Chris Olah on Interpretability](https://axrp.net/episode/2021/12/02/episode-14-interpretability-chris-olah.html) (~1 hr, commute-friendly)
+- [ ] Read: [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
+- [ ] Watch: [Andrej Karpathy — Let's build GPT from scratch](https://www.youtube.com/watch?v=kCc8FmEb1nY) (~2 hrs)
+- [ ] Watch: [3Blue1Brown — Essence of Linear Algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) (priority episodes: 1, 2, 3, 4, 9)
+- [ ] Pencil and paper: `resources/linear_algebra_for_mech_interp.pdf` sections 1–4
+- [ ] Code: manual attention forward pass in PyTorch (no TransformerLens); einsum practice notebook
+
+---
+
 ## 2026-03-29 — Week 1 notebook
 
 Executed `w01-residual-stream.ipynb` and completed the reflection cell. Core concepts landed well: correctly identified the three residual stream dimensions (batch, position, d_model) and noted that mean norm grows across layers. Missed that the `<|endoftext|>` BOS token at position 0 is the real norm outlier — norm climbs to ~3000 by layer 9 while content tokens stay in the 50–175 range, a known GPT-2 quirk where the BOS token acts as a garbage collector for unplaced information. Also noted the L11 attention dominance but wasn't sure what to make of it — likely the final layer doing contextual assembly before unembedding, while earlier MLP-heavy layers handle lookup-style computation. Prediction quality observation was accurate: nothing surprising, with " over" → " the" at 34% being the standout.
@@ -22,7 +34,7 @@ Finished reading the Math Framework paper (Elhage 2021) through the one-layer at
 
 Generated a pencil-and-paper linear algebra exercise set (`resources/linear_algebra_for_mech_interp.pdf`) — 21 exercises across 5 sections with worked solutions, formatted in paper-style LaTeX. Sections cover vectors and dot products, matrix multiplication, linear transformations, attention scores by hand (full $QK^T/\sqrt{d}$ + softmax walkthrough), and einsum notation. Compiled with tectonic. The goal is to build intuition for the notation in the Math Framework paper before going deeper into ARENA.
 
-Also added a Week 1.5 math foundations sprint to the research plan, inserting a focused week between the initial environment setup and the induction heads work. Resources for that week: Illustrated Transformer, Andrej Karpathy's "Let's build GPT from scratch," 3Blue1Brown Essence of Linear Algebra (priority episodes), 80k Hours Neel Nanda (pulled forward), and AXRP Ep. 14.
+Also added a Week 2 math foundations sprint to the research plan, inserting a focused week between the initial environment setup (Week 1) and the induction heads work (Week 3). Resources for that week: Illustrated Transformer, Andrej Karpathy's "Let's build GPT from scratch," 3Blue1Brown Essence of Linear Algebra (priority episodes), 80k Hours Neel Nanda (pulled forward), and AXRP Ep. 14.
 
 ---
 
@@ -41,7 +53,7 @@ Hit a setup issue in exercise 1.1 — the ARENA notebook uses `pkg_resources`, w
 
 ## 2026-03-24
 
-Fixed bugs in `w01-residual-stream.ipynb` to get it running. Listened to a NotebookLM audio summary of "A Mathematical Framework for Transformer Circuits" (Elhage 2021) and started reading the paper. Plan reading covers: Summary of Results, Transformer Overview, Zero-Layer Transformers, and One-Layer Attention-Only Transformers — stopping before the Two-Layer section, which is Week 2 material.
+Fixed bugs in `w01-residual-stream.ipynb` to get it running. Listened to a NotebookLM audio summary of "A Mathematical Framework for Transformer Circuits" (Elhage 2021) and started reading the paper. Plan reading covers: Summary of Results, Transformer Overview, Zero-Layer Transformers, and One-Layer Attention-Only Transformers — stopping before the Two-Layer section, which is Week 3 material.
 
 ---
 
@@ -53,7 +65,7 @@ Created `w01-residual-stream.ipynb` — covers loading GPT-2 Small via HookedTra
 
 ---
 
-## 2026-03-22 — Week 1 Plan
+## 2026-03-22 — Week 1 Plan (Environment Setup & One-Layer Models)
 
 - [x] Listen: [80k Hours Ep. 107 — Chris Olah](https://80000hours.org/podcast/episodes/chris-olah-interpretability-research/)
 - [x] Read: [A Mathematical Framework for Transformer Circuits](https://transformer-circuits.pub/2021/framework/index.html) — Elhage 2021, sections 1–4 (residual stream, QK circuit, OV circuit, virtual attention heads)

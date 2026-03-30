@@ -3,7 +3,7 @@
 Elhage et al., 2021 — transformer-circuits.pub/2021/framework/index.html
 
 *Read through the one-layer attention-only transformers section (March 2026).*
-*Two-layer section is Week 2 material.*
+*Two-layer section is Week 3 material.*
 
 ---
 
