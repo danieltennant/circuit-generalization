@@ -10,7 +10,7 @@
 - [ ] Listen: [AXRP Ep. 14 — Chris Olah on Interpretability](https://axrp.net/episode/2021/12/02/episode-14-interpretability-chris-olah.html) (~1 hr, commute-friendly)
 - [ ] Read: [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
 - [ ] Watch: [Andrej Karpathy — Let's build GPT from scratch](https://www.youtube.com/watch?v=kCc8FmEb1nY) (~2 hrs)
-- [ ] Watch: [3Blue1Brown — Essence of Linear Algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) (priority episodes: 1, 2, 3, 4, 9)
+- [~] Watch: [3Blue1Brown — Essence of Linear Algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) (priority episodes: 1, 2, 3, 4 ✓ — episode 9 remaining)
 - [ ] Pencil and paper: `resources/linear_algebra_for_mech_interp.pdf` sections 1–4
 - [ ] Code: manual attention forward pass in PyTorch (no TransformerLens); einsum practice notebook
 
