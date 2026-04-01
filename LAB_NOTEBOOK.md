@@ -4,6 +4,12 @@
 
 ---
 
+## 2026-04-01
+
+3Blue1Brown Essence of Linear Algebra episodes 1–4 complete (vectors, linear combinations, matrix multiplication, determinant). Key terms now solid: basis, linear combination, span. Episode 9 (dot products) remaining.
+
+---
+
 ## 2026-03-30 — Week 2 Plan (Math & Transformer Foundations)
 
 - [ ] Listen: [80k Hours — Neel Nanda on Mechanistic Interpretability](https://80000hours.org/podcast/episodes/neel-nanda-mechanistic-interpretability/) (~3 hrs, commute-friendly)
