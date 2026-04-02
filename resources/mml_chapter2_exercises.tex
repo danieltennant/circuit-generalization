@@ -11,7 +11,7 @@
 \usepackage{xcolor}
 \usepackage{mdframed}
 
-\geometry{margin=2.5cm, top=2.8cm, bottom=2.8cm}
+\geometry{margin=2.2cm, top=2.4cm, bottom=2.4cm}
 
 \hypersetup{
     colorlinks=true,
@@ -25,11 +25,11 @@
 
 \newenvironment{exercise}[1][]{%
     \refstepcounter{exercise}%
-    \par\medskip\noindent%
+    \par\smallskip\noindent%
     \textbf{Exercise~\theexercise}%
     \ifx\relax#1\relax\else\ ---\ #1\fi\par\smallskip%
 }{%
-    \par\medskip%
+    \par\smallskip%
 }
 
 % Motivation box
@@ -39,10 +39,10 @@
     backgroundcolor=black!3,
     innerleftmargin=10pt,
     innerrightmargin=10pt,
-    innertopmargin=6pt,
-    innerbottommargin=6pt,
-    skipabove=\medskipamount,
-    skipbelow=\medskipamount,
+    innertopmargin=4pt,
+    innerbottommargin=4pt,
+    skipabove=\smallskipamount,
+    skipbelow=\smallskipamount,
 ]{motivbox}
 
 % Solution environment
@@ -51,11 +51,11 @@
 
 \newenvironment{solution}[1][]{%
     \refstepcounter{solution}%
-    \par\medskip\noindent%
+    \par\smallskip\noindent%
     \textbf{Solution~\thesolution}%
     \ifx\relax#1\relax\else\ ---\ #1\fi\par\smallskip%
 }{%
-    \par\medskip%
+    \par\smallskip%
 }
 
 \newcommand{\code}[1]{\texttt{#1}}
