@@ -1,0 +1,795 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{parskip}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{mdframed}
+
+\geometry{margin=2.5cm, top=2.8cm, bottom=2.8cm}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=black,
+}
+
+% Exercise environment
+\newcounter{exercise}[section]
+\renewcommand{\theexercise}{\thesection.\arabic{exercise}}
+
+\newenvironment{exercise}[1][]{%
+    \refstepcounter{exercise}%
+    \par\medskip\noindent%
+    \textbf{Exercise~\theexercise}%
+    \ifx\relax#1\relax\else\ ---\ #1\fi\par\smallskip%
+}{%
+    \par\medskip%
+}
+
+% Motivation box
+\newmdenv[
+    linewidth=0.6pt,
+    linecolor=black!40,
+    backgroundcolor=black!3,
+    innerleftmargin=10pt,
+    innerrightmargin=10pt,
+    innertopmargin=6pt,
+    innerbottommargin=6pt,
+    skipabove=\medskipamount,
+    skipbelow=\medskipamount,
+]{motivbox}
+
+% Solution environment
+\newcounter{solution}[section]
+\renewcommand{\thesolution}{\thesection.\arabic{solution}}
+
+\newenvironment{solution}[1][]{%
+    \refstepcounter{solution}%
+    \par\medskip\noindent%
+    \textbf{Solution~\thesolution}%
+    \ifx\relax#1\relax\else\ ---\ #1\fi\par\smallskip%
+}{%
+    \par\medskip%
+}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+\title{\textbf{Mathematics for Machine Learning --- Chapter 2}\\[0.4em]
+\large Pencil-and-Paper Exercises}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+\noindent
+\textbf{Who this is for.} Someone working through MML Chapter 2 (Linear Algebra, \S2.1--2.3
+and \S2.7) alongside mechanistic interpretability study. These exercises cover systems of
+equations, matrix properties (rank, transpose, inverse), and linear mappings --- the
+foundations that make transformer weight matrices readable.
+
+\textbf{How to use this.} Work through each section in order. Do the exercises by hand
+before checking the solutions starting on page~\pageref{sec:solutions}.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ──────────────────────────────────────────────────────────────────────────────
+\section{Systems of Linear Equations}
+% ──────────────────────────────────────────────────────────────────────────────
+
+\begin{motivbox}
+\textbf{Why this matters.}
+A system of linear equations $A\vec{x} = \vec{b}$ is the fundamental operation underlying
+almost everything in a transformer. The question ``what input $\vec{x}$ produces output
+$\vec{b}$ through matrix $A$?'' is exactly what you are asking when you reverse-engineer a
+weight matrix. Gaussian elimination --- the row-reduction method for solving systems --- also
+builds intuition for rank and linear dependence, which reappear constantly in circuit
+analysis.
+\end{motivbox}
+
+\begin{exercise}[Solving a $2 \times 2$ system]
+Solve the following system using substitution or elimination:
+\[
+    2x + y = 5, \qquad x - y = 1
+\]
+\begin{enumerate}[label=(\alph*)]
+    \item Write this as an augmented matrix $[A \mid \vec{b}]$.
+    \item Apply row operations to reach row echelon form.
+    \item Read off the solution.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Gaussian elimination on a $3 \times 3$ system]
+Solve:
+\[
+    \begin{bmatrix} 1 & 2 & 1 \\ 2 & 1 & 3 \\ 0 & 1 & 1 \end{bmatrix}
+    \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}
+    =
+    \begin{bmatrix} 6 \\ 9 \\ 3 \end{bmatrix}
+\]
+\begin{enumerate}[label=(\alph*)]
+    \item Write the augmented matrix $[A \mid \vec{b}]$.
+    \item Eliminate $x_1$ from rows 2 and 3 using row operations.
+    \item Eliminate $x_2$ from row 3.
+    \item Back-substitute to find $x_3$, then $x_2$, then $x_1$.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Counting solutions]
+For each augmented matrix below (already in row echelon form), state whether the system
+has \textbf{no solution}, \textbf{one solution}, or \textbf{infinitely many solutions},
+and give a brief reason.
+\begin{enumerate}[label=(\alph*)]
+    \item $\begin{bmatrix} 1 & 2 & \mid & 3 \\ 0 & 1 & \mid & 1 \end{bmatrix}$
+    \item $\begin{bmatrix} 1 & 2 & \mid & 3 \\ 0 & 0 & \mid & 5 \end{bmatrix}$
+    \item $\begin{bmatrix} 1 & 2 & 3 & \mid & 6 \\ 0 & 1 & 1 & \mid & 3 \\ 0 & 0 & 0 & \mid & 0 \end{bmatrix}$
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Homogeneous systems]
+A \emph{homogeneous} system has the form $A\vec{x} = \vec{0}$.
+\begin{enumerate}[label=(\alph*)]
+    \item Why does a homogeneous system always have at least one solution?
+    \item Find the general solution to:
+    \[
+        \begin{bmatrix} 1 & 2 & -1 \\ 2 & 4 & -2 \end{bmatrix}
+        \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}
+        = \begin{bmatrix} 0 \\ 0 \end{bmatrix}
+    \]
+    \item The solution set you found is a \emph{subspace}. What is its dimension?
+          What does that tell you about the null space of this matrix?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Geometric interpretation of solutions]
+Consider a system $A\vec{x} = \vec{b}$ where $A$ is $2 \times 2$ and the two rows of the
+augmented matrix represent two lines in the plane.
+\begin{enumerate}[label=(\alph*)]
+    \item Sketch (roughly) three scenarios: (i) the lines intersect at a point,
+          (ii) the lines are parallel but distinct, (iii) the lines are identical.
+          Match each to: unique solution, no solution, infinitely many solutions.
+    \item Solve the system $x + y = 3$, $2x + 2y = 6$. Which case is this?
+          Describe the solution set geometrically.
+    \item Solve $x + y = 3$, $2x + 2y = 7$. Which case is this?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Back-substitution practice]
+The following matrix is already in row echelon form. Back-substitute to find the solution:
+\[
+    \left[\begin{array}{ccc|c}
+    2 & -1 & 3 & 7 \\
+    0 & 3 & -1 & 4 \\
+    0 & 0 & 2 & 6
+    \end{array}\right]
+\]
+Show each step explicitly.
+\end{exercise}
+
+% ──────────────────────────────────────────────────────────────────────────────
+\section{Matrix Properties}
+% ──────────────────────────────────────────────────────────────────────────────
+
+\begin{motivbox}
+\textbf{Why this matters.}
+Transformer weight matrices have specific structural properties --- the QK matrix is low-rank
+(at most \texttt{d\_head} rank), the attention pattern matrix is square, and composition of
+$W_V W_O$ is a rank-\texttt{d\_head} matrix in $d_{\text{model}} \times d_{\text{model}}$
+space. The concepts in this section --- rank, transpose, identity, inverse --- are what let
+you read those claims in papers without getting lost.
+\end{motivbox}
+
+\begin{exercise}[Rank by row reduction]
+Find the rank of each matrix by reducing it to row echelon form.
+\begin{enumerate}[label=(\alph*)]
+    \item $A = \begin{bmatrix} 1 & 2 & 3 \\ 2 & 4 & 6 \\ 1 & 0 & 1 \end{bmatrix}$
+    \item $B = \begin{bmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \\ 1 & 1 & 2 \end{bmatrix}$
+    \item $C = \begin{bmatrix} 1 & 2 \\ 3 & 4 \\ 5 & 6 \end{bmatrix}$
+          (a $3 \times 2$ matrix --- what is the maximum possible rank?)
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Rank and the weight matrices]
+In GPT-2 Small, each attention head has $d_{\text{model}} = 768$ and $d_{\text{head}} = 64$.
+The query weight matrix $W_Q$ has shape $768 \times 64$.
+\begin{enumerate}[label=(\alph*)]
+    \item What is the maximum possible rank of $W_Q$?
+    \item The QK matrix is defined as $W_{QK} = W_Q W_K^\top$. What shape is $W_{QK}$?
+    \item What is the maximum possible rank of $W_{QK}$?
+    \item Explain in plain language what it means for $W_{QK}$ to have rank 64 in a
+          768-dimensional space. What are the heads ``blind'' to?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Transpose properties]
+Let:
+\[
+    A = \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{bmatrix}
+\]
+\begin{enumerate}[label=(\alph*)]
+    \item Compute $A^\top$.
+    \item Compute $A A^\top$ and $A^\top A$. What are their shapes?
+    \item Is $A A^\top$ symmetric? (A matrix $M$ is symmetric if $M = M^\top$.)
+          Is $A^\top A$ symmetric? State a general rule.
+    \item In attention, the raw scores are $QK^\top$. If $Q$ has shape $(n \times d_h)$
+          and $K$ has shape $(n \times d_h)$, what shape is $QK^\top$? Why is this
+          the right shape for an attention pattern?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[The identity and inverse]
+\begin{enumerate}[label=(\alph*)]
+    \item Write down the $3 \times 3$ identity matrix $I_3$.
+    \item Verify that $I_3 \vec{v} = \vec{v}$ for $\vec{v} = \begin{bmatrix} 2 \\ -1 \\ 3 \end{bmatrix}$.
+    \item Find the inverse of $A = \begin{bmatrix} 2 & 1 \\ 5 & 3 \end{bmatrix}$
+          using the formula for $2 \times 2$ matrices:
+          $A^{-1} = \frac{1}{ad - bc}\begin{bmatrix} d & -b \\ -c & a \end{bmatrix}$.
+    \item Verify your answer: compute $AA^{-1}$ and confirm you get $I$.
+    \item What is the determinant of $\begin{bmatrix} 2 & 4 \\ 1 & 2 \end{bmatrix}$?
+          Does this matrix have an inverse? Why or why not?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Symmetric and orthogonal matrices]
+\begin{enumerate}[label=(\alph*)]
+    \item Which of the following are symmetric?
+    \[
+        P = \begin{bmatrix} 1 & 3 \\ 3 & 2 \end{bmatrix}, \quad
+        Q = \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix}, \quad
+        R = \begin{bmatrix} 4 & 1 & 2 \\ 1 & 0 & 3 \\ 2 & 3 & 5 \end{bmatrix}
+    \]
+    \item A matrix $U$ is \emph{orthogonal} if $U^\top U = I$.
+          Verify that $U = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}$
+          is orthogonal.
+    \item If $U$ is orthogonal, what is $U^{-1}$? (You do not need to compute --- just
+          read it from the definition.)
+    \item Orthogonal matrices preserve vector lengths: $\|U\vec{v}\| = \|\vec{v}\|$.
+          Verify this for $\vec{v} = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$ and the
+          matrix $U$ above.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Matrix multiplication order matters]
+\begin{enumerate}[label=(\alph*)]
+    \item Let $A = \begin{bmatrix} 1 & 2 \\ 0 & 1 \end{bmatrix}$ and
+          $B = \begin{bmatrix} 1 & 0 \\ 3 & 1 \end{bmatrix}$.
+          Compute $AB$ and $BA$. Are they equal?
+    \item This is the non-commutativity of matrix multiplication: in general $AB \neq BA$.
+          Give one concrete example of why the order of $W_Q, W_K$ matters in transformers.
+    \item Compute $(AB)^\top$ and $B^\top A^\top$. Are they equal?
+          This is the \emph{transpose of a product} rule: $(AB)^\top = B^\top A^\top$.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Trace and the identity]
+The \emph{trace} of a square matrix $A$ is the sum of its diagonal entries:
+$\mathrm{tr}(A) = \sum_i A_{ii}$.
+\begin{enumerate}[label=(\alph*)]
+    \item Compute $\mathrm{tr}(I_3)$.
+    \item Compute $\mathrm{tr}(A)$ for $A = \begin{bmatrix} 3 & 1 & 0 \\ 2 & -1 & 4 \\ 0 & 2 & 5 \end{bmatrix}$.
+    \item It can be shown that $\mathrm{tr}(AB) = \mathrm{tr}(BA)$ even though $AB \neq BA$ in general.
+          Verify this for $A = \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}$ and
+          $B = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$.
+\end{enumerate}
+\end{exercise}
+
+% ──────────────────────────────────────────────────────────────────────────────
+\section{Linear Mappings}
+% ──────────────────────────────────────────────────────────────────────────────
+
+\begin{motivbox}
+\textbf{Why this matters.}
+MML \S2.7 frames matrices not as arrays of numbers but as \emph{functions between vector
+spaces}. This is the right way to think about transformer weight matrices: $W_Q$ is a
+function that maps residual stream vectors to query space; $W_E$ (the embedding matrix) is a
+function that maps token indices to vectors. The kernel and image of these functions tell you
+what information they preserve, what they discard, and what they can express.
+\end{motivbox}
+
+\begin{exercise}[Verifying linearity]
+A function $f: \mathbb{R}^n \to \mathbb{R}^m$ is \emph{linear} if:
+(i) $f(\vec{u} + \vec{v}) = f(\vec{u}) + f(\vec{v})$, and
+(ii) $f(\alpha \vec{v}) = \alpha f(\vec{v})$ for any scalar $\alpha$.
+
+For each function below, determine whether it is linear. If not, give a counterexample.
+\begin{enumerate}[label=(\alph*)]
+    \item $f(x_1, x_2) = 3x_1 - 2x_2$
+    \item $f(x_1, x_2) = x_1 x_2$
+    \item $f(x_1, x_2) = x_1 + 1$
+    \item $f(\vec{x}) = A\vec{x}$ for any fixed matrix $A$
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Kernel (null space)]
+The \emph{kernel} of a linear map $f$ is the set of all inputs that map to $\vec{0}$:
+$\ker(f) = \{\vec{x} : f(\vec{x}) = \vec{0}\}$.
+
+For $A = \begin{bmatrix} 1 & 2 & 3 \\ 2 & 4 & 6 \end{bmatrix}$:
+\begin{enumerate}[label=(\alph*)]
+    \item Solve $A\vec{x} = \vec{0}$ to find $\ker(A)$.
+    \item What is the dimension of $\ker(A)$? (This is the \emph{nullity} of $A$.)
+    \item The rank-nullity theorem states: $\mathrm{rank}(A) + \mathrm{nullity}(A) = n$,
+          where $n$ is the number of columns. Verify this holds for $A$.
+    \item In terms of transformer circuits: if $\ker(W_Q)$ is large, what does that mean
+          about how much information the query projection ``throws away''?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Image (column space)]
+The \emph{image} of a linear map $A$ is the set of all vectors $A$ can produce:
+$\mathrm{im}(A) = \{A\vec{x} : \vec{x} \in \mathbb{R}^n\}$.
+
+For $A = \begin{bmatrix} 1 & 0 \\ 0 & 1 \\ 1 & 1 \end{bmatrix}$:
+\begin{enumerate}[label=(\alph*)]
+    \item What is the shape of $A$? What are its domain and codomain?
+    \item What is $\mathrm{rank}(A)$?
+    \item The image of $A$ is spanned by the columns of $A$. Write out the two
+          column vectors.
+    \item Is the vector $\begin{bmatrix} 2 \\ 3 \\ 5 \end{bmatrix}$ in $\mathrm{im}(A)$?
+          Is $\begin{bmatrix} 1 \\ 0 \\ 2 \end{bmatrix}$?
+          (Check whether each can be written as $A\vec{x}$ for some $\vec{x}$.)
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Composition of linear maps]
+Let $f: \mathbb{R}^3 \to \mathbb{R}^2$ be given by matrix $A$, and
+$g: \mathbb{R}^2 \to \mathbb{R}^2$ be given by matrix $B$:
+\[
+    A = \begin{bmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \end{bmatrix}, \qquad
+    B = \begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}
+\]
+\begin{enumerate}[label=(\alph*)]
+    \item Compute $C = BA$ (the matrix for $g \circ f$). What shape is $C$?
+    \item Apply $f$ then $g$ to $\vec{v} = \begin{bmatrix} 1 \\ 2 \\ 1 \end{bmatrix}$
+          step by step.
+    \item Apply $C$ directly to $\vec{v}$ and confirm you get the same answer.
+    \item In a transformer, the OV circuit $W_V W_O$ is a composition of two linear maps.
+          $W_V$ maps from $d_{\text{model}}$ to $d_{\text{head}}$, and $W_O$ maps from
+          $d_{\text{head}}$ back to $d_{\text{model}}$.
+          What is the shape of $W_V W_O$? What is its maximum rank?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Isomorphism and dimension]
+Two vector spaces are \emph{isomorphic} if there is a bijective linear map between them.
+\begin{enumerate}[label=(\alph*)]
+    \item Are $\mathbb{R}^2$ and $\mathbb{R}^3$ isomorphic? Why or why not?
+          (Hint: think about what a bijective linear map would have to do to dimensions.)
+    \item The space of $2 \times 2$ matrices $\mathbb{R}^{2 \times 2}$ has dimension 4.
+          Is it isomorphic to $\mathbb{R}^4$? Describe an explicit bijection
+          (a way to turn any $2 \times 2$ matrix into a 4-dimensional vector).
+    \item In a transformer, the residual stream lives in $\mathbb{R}^{d_{\text{model}}}$.
+          The query space for one head lives in $\mathbb{R}^{d_{\text{head}}}$.
+          Are these isomorphic? What does $W_Q$ do to bridge them,
+          and why is information necessarily lost?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Change of basis (conceptual)]
+\begin{enumerate}[label=(\alph*)]
+    \item The standard basis for $\mathbb{R}^2$ is
+          $\vec{e}_1 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$,
+          $\vec{e}_2 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$.
+          Write $\vec{v} = \begin{bmatrix} 3 \\ -2 \end{bmatrix}$ as a linear combination
+          of $\vec{e}_1$ and $\vec{e}_2$.
+    \item Now suppose you want to express $\vec{v}$ in a new basis:
+          $\vec{b}_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$,
+          $\vec{b}_2 = \begin{bmatrix} 1 \\ -1 \end{bmatrix}$.
+          Find scalars $c_1, c_2$ such that $c_1 \vec{b}_1 + c_2 \vec{b}_2 = \vec{v}$.
+    \item In mechanistic interpretability, researchers often project residual stream
+          activations onto specific directions (e.g., the ``unembedding direction'' of a
+          token, or the top singular vectors of a weight matrix) to understand what
+          information is present.
+          How does this relate to the idea of expressing a vector in a different basis?
+\end{enumerate}
+\end{exercise}
+
+% ──────────────────────────────────────────────────────────────────────────────
+\section{Norms, Inner Products, and Orthogonality}
+% ──────────────────────────────────────────────────────────────────────────────
+
+\begin{motivbox}
+\textbf{Why this matters.}
+MML Chapter 3 (\S3.1--3.4) generalises the dot product to the concept of an \emph{inner product},
+and introduces norms and orthogonality rigorously. In transformers: the $\sqrt{d_{\text{head}}}$
+scaling in attention is a direct consequence of norm growth with dimension; orthogonality explains
+why features in different subspaces don't interfere; and projection onto a direction is an inner
+product operation. These exercises build the geometric intuition behind those mechanisms.
+\end{motivbox}
+
+\begin{exercise}[Computing norms]
+The $\ell^2$ (Euclidean) norm of a vector $\vec{v} \in \mathbb{R}^n$ is
+$\|\vec{v}\|_2 = \sqrt{\sum_i v_i^2}$.
+\begin{enumerate}[label=(\alph*)]
+    \item Compute $\|\vec{v}\|_2$ for $\vec{v} = \begin{bmatrix} 3 \\ -4 \end{bmatrix}$.
+    \item Compute $\|\vec{u}\|_2$ for $\vec{u} = \begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix}$.
+    \item If each component of $\vec{u}$ is drawn from $\mathcal{N}(0,1)$ with $d$ components,
+          the expected $\ell^2$ norm grows as $\sqrt{d}$. This is why attention logits are
+          scaled by $\frac{1}{\sqrt{d_{\text{head}}}}$.
+          For $d_{\text{head}} = 64$, what is the scaling factor?
+    \item Compute the $\ell^1$ norm $\|\vec{v}\|_1 = \sum_i |v_i|$ for $\vec{v} = \begin{bmatrix} 3 \\ -4 \end{bmatrix}$.
+          Is it larger or smaller than $\|\vec{v}\|_2$?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Inner products]
+The standard dot product is one example of an inner product. A general inner product
+$\langle \cdot, \cdot \rangle$ must be: (i) symmetric, (ii) linear in the first argument,
+(iii) positive definite ($\langle \vec{v}, \vec{v} \rangle \geq 0$, with equality only if
+$\vec{v} = \vec{0}$).
+\begin{enumerate}[label=(\alph*)]
+    \item Verify that the standard dot product $\langle \vec{u}, \vec{v} \rangle = \vec{u}^\top \vec{v}$
+          satisfies positive definiteness for $\vec{v} = \begin{bmatrix} 2 \\ -3 \end{bmatrix}$.
+    \item A \emph{weighted} inner product uses a positive definite matrix $A$:
+          $\langle \vec{u}, \vec{v} \rangle_A = \vec{u}^\top A \vec{v}$.
+          Compute $\langle \vec{u}, \vec{v} \rangle_A$ for
+          $\vec{u} = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$,
+          $\vec{v} = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$,
+          $A = \begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}$.
+    \item Is $f(\vec{u}, \vec{v}) = u_1 v_1 - u_2 v_2$ a valid inner product on $\mathbb{R}^2$?
+          Check positive definiteness by trying $\vec{v} = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Orthogonality and projection]
+Two vectors are \emph{orthogonal} if their inner product is zero: $\langle \vec{u}, \vec{v} \rangle = 0$.
+\begin{enumerate}[label=(\alph*)]
+    \item Are $\vec{u} = \begin{bmatrix} 1 \\ 2 \\ -1 \end{bmatrix}$ and
+          $\vec{v} = \begin{bmatrix} 2 \\ 0 \\ 2 \end{bmatrix}$ orthogonal?
+    \item The projection of $\vec{b}$ onto $\vec{a}$ is:
+          $\mathrm{proj}_{\vec{a}} \vec{b} = \frac{\vec{a} \cdot \vec{b}}{\vec{a} \cdot \vec{a}} \vec{a}$
+    Project $\vec{b} = \begin{bmatrix} 3 \\ 4 \end{bmatrix}$ onto $\vec{a} = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$.
+          Interpret the result geometrically.
+    \item Compute the projection of $\vec{b} = \begin{bmatrix} 3 \\ 4 \end{bmatrix}$ onto
+          $\vec{a} = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$ (normalise $\vec{a}$ first).
+    \item In mech interp, researchers project residual stream activations onto a
+          ``token direction'' (e.g., the row of the unembedding matrix for token ``John'').
+          This projection is an inner product. A high value means the residual stream is
+          ``pointing toward'' that token's output direction. Does this feel concrete now?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Orthogonal complements]
+The \emph{orthogonal complement} of a subspace $U$ in $\mathbb{R}^n$ is
+$U^\perp = \{\vec{w} : \langle \vec{w}, \vec{u} \rangle = 0 \text{ for all } \vec{u} \in U\}$.
+\begin{enumerate}[label=(\alph*)]
+    \item Let $U = \mathrm{span}\!\left\{\begin{bmatrix}1\\1\\0\end{bmatrix}\right\}$ in $\mathbb{R}^3$.
+          Find two vectors in $U^\perp$ (i.e., two independent vectors orthogonal to $\begin{bmatrix}1\\1\\0\end{bmatrix}$).
+    \item What is $\dim(U) + \dim(U^\perp)$? What is the ambient dimension $n$? State the general rule.
+    \item Every vector $\vec{x} \in \mathbb{R}^n$ can be uniquely decomposed as
+          $\vec{x} = \vec{u} + \vec{u}^\perp$ where $\vec{u} \in U$ and $\vec{u}^\perp \in U^\perp$.
+          Decompose $\vec{x} = \begin{bmatrix}2\\3\\1\end{bmatrix}$ into its component
+          along $\vec{a} = \begin{bmatrix}1\\1\\0\end{bmatrix}$ and its orthogonal remainder.
+    \item Why does orthogonal decomposition matter for low-rank matrices? If $W_Q$ has rank 64,
+          what happens to residual stream components in $({\rm im}\, W_Q^\top)^\perp$?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Angles and the $\sqrt{d}$ scaling]
+The angle $\theta$ between two vectors satisfies $\cos\theta = \frac{\vec{u} \cdot \vec{v}}{\|\vec{u}\|\|\vec{v}\|}$.
+\begin{enumerate}[label=(\alph*)]
+    \item Find the angle between $\vec{u} = \begin{bmatrix}1\\0\end{bmatrix}$ and
+          $\vec{v} = \begin{bmatrix}1\\1\end{bmatrix}$ (your answer will be in radians or degrees).
+    \item Suppose query vector $\vec{q}$ and key vector $\vec{k}$ both have unit norm
+          and are at $45^\circ$ to each other. What is $\vec{q} \cdot \vec{k}$?
+    \item Now suppose $d_{\text{head}} = 64$ and both $\vec{q}, \vec{k}$ have components
+          drawn from $\mathcal{N}(0, 1)$, so their expected norm is $\sqrt{64} = 8$.
+          What is the expected scale of $\vec{q} \cdot \vec{k}$ if the angle is still $45^\circ$?
+    \item After dividing by $\sqrt{d_{\text{head}}} = 8$, what is the scaled attention logit?
+          Explain in one sentence why this scaling is necessary for softmax to produce
+          well-spread attention weights rather than near-one-hot distributions.
+\end{enumerate}
+\end{exercise}
+
+% ──────────────────────────────────────────────────────────────────────────────
+\newpage
+\section*{Solutions}
+\label{sec:solutions}
+\addcontentsline{toc}{section}{Solutions}
+% ──────────────────────────────────────────────────────────────────────────────
+
+\setcounter{section}{1}
+\setcounter{solution}{0}
+
+% ── Section 1 Solutions ───────────────────────────────────────────────────────
+\subsection*{Section 1: Systems of Linear Equations}
+
+\begin{solution}[$2 \times 2$ system]
+\begin{enumerate}[label=(\alph*)]
+    \item Augmented matrix: $\begin{bmatrix} 2 & 1 & \mid & 5 \\ 1 & -1 & \mid & 1 \end{bmatrix}$
+    \item $R_1 \leftrightarrow R_2$: $\begin{bmatrix} 1 & -1 & \mid & 1 \\ 2 & 1 & \mid & 5 \end{bmatrix}$,
+          then $R_2 \leftarrow R_2 - 2R_1$:
+          $\begin{bmatrix} 1 & -1 & \mid & 1 \\ 0 & 3 & \mid & 3 \end{bmatrix}$
+    \item $y = 1$, back-substitute: $x - 1 = 1$, so $x = 2$. Solution: $(x, y) = (2, 1)$.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Gaussian elimination on a $3 \times 3$ system]
+\begin{enumerate}[label=(\alph*)]
+    \item $\begin{bmatrix} 1 & 2 & 1 & \mid & 6 \\ 2 & 1 & 3 & \mid & 9 \\ 0 & 1 & 1 & \mid & 3 \end{bmatrix}$
+    \item $R_2 \leftarrow R_2 - 2R_1$:
+          $\begin{bmatrix} 1 & 2 & 1 & \mid & 6 \\ 0 & -3 & 1 & \mid & -3 \\ 0 & 1 & 1 & \mid & 3 \end{bmatrix}$
+    \item $R_3 \leftarrow R_3 + \frac{1}{3}R_2$:
+          $\begin{bmatrix} 1 & 2 & 1 & \mid & 6 \\ 0 & -3 & 1 & \mid & -3 \\ 0 & 0 & \frac{4}{3} & \mid & 2 \end{bmatrix}$
+    \item $x_3 = 2 \cdot \frac{3}{4} = \frac{3}{2}$. From row 2: $-3x_2 + \frac{3}{2} = -3$, so $x_2 = \frac{3}{2}$.
+          From row 1: $x_1 + 3 + \frac{3}{2} = 6$, so $x_1 = \frac{3}{2}$.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Counting solutions]
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{One solution.} Two equations, two unknowns, no contradiction. Back-substitute: $x_2 = 1$, $x_1 = 1$.
+    \item \textbf{No solution.} Row 2 says $0 = 5$, which is a contradiction.
+    \item \textbf{Infinitely many solutions.} The last row is all zeros --- the system is underdetermined.
+          One free variable ($x_3$); solutions form a 1-dimensional family.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Homogeneous systems]
+\begin{enumerate}[label=(\alph*)]
+    \item $\vec{x} = \vec{0}$ is always a solution (the \emph{trivial solution}).
+    \item Row reduce:
+          $\begin{bmatrix} 1 & 2 & -1 \\ 2 & 4 & -2 \end{bmatrix} \to
+           \begin{bmatrix} 1 & 2 & -1 \\ 0 & 0 & 0 \end{bmatrix}$
+          Row 2 is redundant. Free variables: $x_2 = s$, $x_3 = t$. Then $x_1 = -2s + t$.
+          General solution: $\begin{bmatrix} -2s + t \\ s \\ t \end{bmatrix}
+          = s\begin{bmatrix} -2 \\ 1 \\ 0 \end{bmatrix}
+          + t\begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix}$
+    \item Dimension 2. The null space is spanned by two independent vectors --- the matrix ``throws away''
+          a 2-dimensional subspace of its input.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Geometric interpretation of solutions]
+\begin{enumerate}[label=(\alph*)]
+    \item (i) Lines intersect → unique solution. (ii) Parallel, distinct → no solution. (iii) Same line → infinitely many solutions.
+    \item $2x + 2y = 6$ is $2 \times (x + y = 3)$ --- the same line. Infinitely many solutions:
+          $\{(t, 3-t) : t \in \mathbb{R}\}$. A whole line of solutions.
+    \item Row reduce: $R_2 - 2R_1$ gives $0 = 1$ --- no solution. Parallel lines.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Back-substitution practice]
+From row 3: $2x_3 = 6 \Rightarrow x_3 = 3$.
+From row 2: $3x_2 - 3 = 4 \Rightarrow x_2 = \frac{7}{3}$.
+From row 1: $2x_1 - \frac{7}{3} + 9 = 7 \Rightarrow 2x_1 = 7 + \frac{7}{3} - 9 = \frac{1}{3} \Rightarrow x_1 = \frac{1}{6}$.
+\end{solution}
+
+\setcounter{section}{2}
+\setcounter{solution}{0}
+
+% ── Section 2 Solutions ───────────────────────────────────────────────────────
+\newpage
+\subsection*{Section 2: Matrix Properties}
+
+\begin{solution}[Rank by row reduction]
+\begin{enumerate}[label=(\alph*)]
+    \item $R_2 \leftarrow R_2 - 2R_1$, $R_3 \leftarrow R_3 - R_1$:
+          $\begin{bmatrix} 1 & 2 & 3 \\ 0 & 0 & 0 \\ 0 & -2 & -2 \end{bmatrix}$,
+          swap $R_2 \leftrightarrow R_3$: two nonzero rows. $\mathrm{rank}(A) = 2$.
+    \item $R_3 \leftarrow R_3 - R_1 - R_2$:
+          $\begin{bmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \\ 0 & 0 & 0 \end{bmatrix}$. $\mathrm{rank}(B) = 2$.
+    \item Maximum possible rank is $\min(3, 2) = 2$. After reduction: two independent rows. $\mathrm{rank}(C) = 2$.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Rank and the weight matrices]
+\begin{enumerate}[label=(\alph*)]
+    \item $\min(768, 64) = 64$.
+    \item $W_Q$ is $(768 \times 64)$, $W_K^\top$ is $(64 \times 768)$, so $W_{QK}$ is $(768 \times 768)$.
+    \item At most $64$ (bounded by the intermediate dimension).
+    \item The head lives in a 64-dimensional subspace of a 768-dimensional space. Any residual stream
+          direction orthogonal to this subspace is invisible to the head's attention pattern --- it
+          contributes nothing to the query or key computation.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Transpose properties]
+\begin{enumerate}[label=(\alph*)]
+    \item $A^\top = \begin{bmatrix} 1 & 4 \\ 2 & 5 \\ 3 & 6 \end{bmatrix}$
+    \item $AA^\top$ is $(2 \times 3)(3 \times 2) = (2 \times 2)$;
+          $A^\top A$ is $(3 \times 2)(2 \times 3) = (3 \times 3)$.
+    \item Both are symmetric. General rule: $AA^\top$ and $A^\top A$ are always symmetric for any $A$.
+    \item $Q$ is $(n \times d_h)$, $K^\top$ is $(d_h \times n)$, so $QK^\top$ is $(n \times n)$ --- one
+          score per (query position, key position) pair, which is exactly an attention weight matrix.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[The identity and inverse]
+\begin{enumerate}[label=(\alph*)]
+    \item $I_3 = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}$
+    \item $I_3 \vec{v} = \begin{bmatrix} 2 \\ -1 \\ 3 \end{bmatrix}$ (unchanged).
+    \item $\det(A) = 2 \cdot 3 - 1 \cdot 5 = 1$. So $A^{-1} = \begin{bmatrix} 3 & -1 \\ -5 & 2 \end{bmatrix}$.
+    \item $AA^{-1} = \begin{bmatrix} 2 & 1 \\ 5 & 3 \end{bmatrix}\begin{bmatrix} 3 & -1 \\ -5 & 2 \end{bmatrix}
+          = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$. \checkmark
+    \item $\det = 2 \cdot 2 - 4 \cdot 1 = 0$. No inverse --- the matrix is \emph{singular} (rank 1, not full rank).
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Symmetric and orthogonal matrices]
+\begin{enumerate}[label=(\alph*)]
+    \item $P$ and $R$ are symmetric ($P^\top = P$, $R^\top = R$). $Q$ is not: $Q^\top = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix} \neq Q$.
+    \item $U^\top U = \frac{1}{2}\begin{bmatrix} 1 & 1 \\ -1 & 1 \end{bmatrix}
+          \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}
+          = \frac{1}{2}\begin{bmatrix} 2 & 0 \\ 0 & 2 \end{bmatrix} = I$. \checkmark
+    \item $U^{-1} = U^\top$ (read directly from $U^\top U = I$).
+    \item $U\vec{v} = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ 1 \end{bmatrix}$.
+          $\|U\vec{v}\| = \frac{1}{\sqrt{2}}\sqrt{1^2 + 1^2} = \frac{\sqrt{2}}{\sqrt{2}} = 1 = \|\vec{v}\|$. \checkmark
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Matrix multiplication order matters]
+\begin{enumerate}[label=(\alph*)]
+    \item $AB = \begin{bmatrix}7&2\\3&1\end{bmatrix}$, $BA = \begin{bmatrix}1&2\\3&7\end{bmatrix}$. Not equal.
+    \item The QK matrix $W_Q W_K^\top$ defines the attention pattern; $W_K^\top W_Q$ has a different shape
+          and different meaning entirely. Order encodes the direction of the mapping.
+    \item $(AB)^\top = \begin{bmatrix}7&3\\2&1\end{bmatrix}$.
+          $B^\top A^\top = \begin{bmatrix}1&3\\0&1\end{bmatrix}\begin{bmatrix}1&0\\2&1\end{bmatrix} = \begin{bmatrix}7&3\\2&1\end{bmatrix}$. Equal. \checkmark
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Trace and the identity]
+\begin{enumerate}[label=(\alph*)]
+    \item $\mathrm{tr}(I_3) = 1 + 1 + 1 = 3$.
+    \item $\mathrm{tr}(A) = 3 + (-1) + 5 = 7$.
+    \item $AB = \begin{bmatrix}2&1\\4&3\end{bmatrix}$, $\mathrm{tr}(AB) = 5$.
+          $BA = \begin{bmatrix}3&4\\1&2\end{bmatrix}$, $\mathrm{tr}(BA) = 5$. \checkmark
+\end{enumerate}
+\end{solution}
+
+\setcounter{section}{3}
+\setcounter{solution}{0}
+
+% ── Section 3 Solutions ───────────────────────────────────────────────────────
+\newpage
+\subsection*{Section 3: Linear Mappings}
+
+\begin{solution}[Verifying linearity]
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{Linear.} $f(\vec{u} + \vec{v}) = 3(u_1 + v_1) - 2(u_2 + v_2) = f(\vec{u}) + f(\vec{v})$;
+          $f(\alpha\vec{v}) = \alpha f(\vec{v})$. Both hold.
+    \item \textbf{Not linear.} $f(2\vec{v}) = 2v_1 \cdot 2v_2 = 4v_1 v_2 \neq 2 f(\vec{v})$.
+    \item \textbf{Not linear.} $f(\vec{0}) = 0 + 1 = 1 \neq 0$. Linear maps must send $\vec{0}$ to $\vec{0}$.
+    \item \textbf{Linear.} Matrix multiplication satisfies both linearity conditions for any fixed $A$.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Kernel (null space)]
+\begin{enumerate}[label=(\alph*)]
+    \item Row reduce: $R_2 \leftarrow R_2 - 2R_1$:
+          $\begin{bmatrix} 1 & 2 & 3 \\ 0 & 0 & 0 \end{bmatrix}$.
+          Free variables: $x_2 = s$, $x_3 = t$. Then $x_1 = -2s - 3t$.
+          $\ker(A) = \mathrm{span}\!\left\{\begin{bmatrix} -2 \\ 1 \\ 0 \end{bmatrix},
+          \begin{bmatrix} -3 \\ 0 \\ 1 \end{bmatrix}\right\}$
+    \item Nullity $= 2$.
+    \item $\mathrm{rank}(A) = 1$ (one nonzero row). $1 + 2 = 3 = $ number of columns. \checkmark
+    \item A large kernel means the query projection discards a large subspace of the residual stream ---
+          many residual stream directions contribute nothing to the head's attention pattern.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Image (column space)]
+\begin{enumerate}[label=(\alph*)]
+    \item Shape: $3 \times 2$. Domain: $\mathbb{R}^2$, codomain: $\mathbb{R}^3$.
+    \item Rank 2 (columns are independent).
+    \item Column vectors: $\begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix}$ and $\begin{bmatrix} 0 \\ 1 \\ 1 \end{bmatrix}$.
+    \item For $\begin{bmatrix} 2 \\ 3 \\ 5 \end{bmatrix}$: need $x_1 = 2$, $x_2 = 3$, check third component $2 + 3 = 5$. \checkmark In the image.
+          For $\begin{bmatrix} 1 \\ 0 \\ 2 \end{bmatrix}$: need $x_1 = 1$, $x_2 = 0$, check $1 + 0 = 1 \neq 2$. \textbf{Not} in the image.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Composition of linear maps]
+\begin{enumerate}[label=(\alph*)]
+    \item $C = BA = \begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}\begin{bmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \end{bmatrix}
+          = \begin{bmatrix} 2 & 0 & 2 \\ 0 & 3 & 3 \end{bmatrix}$. Shape: $2 \times 3$.
+    \item $f(\vec{v}) = \begin{bmatrix} 1+1 \\ 2+1 \end{bmatrix} = \begin{bmatrix} 2 \\ 3 \end{bmatrix}$.
+          $g(f(\vec{v})) = \begin{bmatrix} 4 \\ 9 \end{bmatrix}$.
+    \item $C\vec{v} = \begin{bmatrix} 2+0+2 \\ 0+6+3 \end{bmatrix} = \begin{bmatrix} 4 \\ 9 \end{bmatrix}$. \checkmark
+    \item $W_V$ is $(d_h \times d_m)$, $W_O$ is $(d_m \times d_h)$... Actually per MML convention with row vectors:
+          $W_V$ maps $(d_m \to d_h)$ and $W_O$ maps $(d_h \to d_m)$, so $W_V W_O$ is $(d_m \times d_m)$.
+          Maximum rank: $d_h = 64$.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Isomorphism and dimension]
+\begin{enumerate}[label=(\alph*)]
+    \item No. A bijective linear map preserves dimension, but $\mathbb{R}^2$ has dimension 2 and
+          $\mathbb{R}^3$ has dimension 3. No such bijection exists.
+    \item Yes. An explicit bijection: $\begin{bmatrix}a&b\\c&d\end{bmatrix} \mapsto \begin{bmatrix}a\\b\\c\\d\end{bmatrix}$.
+          This is linear, injective, and surjective.
+    \item $\mathbb{R}^{768}$ and $\mathbb{R}^{64}$ are not isomorphic (different dimensions).
+          $W_Q$ maps from the larger space to the smaller one --- it is a surjective (onto)
+          but not injective map. Its kernel has dimension $768 - 64 = 704$: a 704-dimensional
+          subspace of the residual stream maps to zero and is completely invisible to the head.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Change of basis]
+\begin{enumerate}[label=(\alph*)]
+    \item $\vec{v} = 3\vec{e}_1 + (-2)\vec{e}_2$.
+    \item Solve $c_1 + c_2 = 3$, $c_1 - c_2 = -2$. Adding: $2c_1 = 1$, so $c_1 = \frac{1}{2}$, $c_2 = \frac{5}{2}$.
+    \item Projecting a residual stream vector onto a specific direction (e.g., the ``John'' direction in the IOI
+          circuit) is exactly expressing that vector's coordinates in a new basis where that direction is
+          one of the basis vectors. The projection coefficient tells you ``how much'' of that concept is present.
+\end{enumerate}
+\end{solution}
+
+\setcounter{section}{4}
+\setcounter{solution}{0}
+
+% ── Section 4 Solutions ───────────────────────────────────────────────────────
+\newpage
+\subsection*{Section 4: Norms, Inner Products, and Orthogonality}
+
+\begin{solution}[Computing norms]
+\begin{enumerate}[label=(\alph*)]
+    \item $\|\vec{v}\|_2 = \sqrt{9 + 16} = \sqrt{25} = 5$.
+    \item $\|\vec{u}\|_2 = \sqrt{1+1+1+1} = 2$.
+    \item $\frac{1}{\sqrt{64}} = \frac{1}{8} = 0.125$.
+    \item $\|\vec{v}\|_1 = 3 + 4 = 7$. Larger than $\|\vec{v}\|_2 = 5$. In general $\|\vec{v}\|_1 \geq \|\vec{v}\|_2$.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Inner products]
+\begin{enumerate}[label=(\alph*)]
+    \item $\langle \vec{v}, \vec{v} \rangle = 4 + 9 = 13 > 0$. \checkmark
+    \item $\vec{u}^\top A \vec{v} = \begin{bmatrix}1&0\end{bmatrix}\begin{bmatrix}2&0\\0&3\end{bmatrix}\begin{bmatrix}1\\1\end{bmatrix}
+          = \begin{bmatrix}2&0\end{bmatrix}\begin{bmatrix}1\\1\end{bmatrix} = 2$.
+    \item $f(\vec{v},\vec{v}) = 0 \cdot 0 - 1 \cdot 1 = -1 < 0$. Not positive definite --- not a valid inner product.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Orthogonality and projection]
+\begin{enumerate}[label=(\alph*)]
+    \item $\vec{u} \cdot \vec{v} = 2 + 0 - 2 = 0$. Yes, orthogonal.
+    \item $\mathrm{proj}_{\vec{a}}\vec{b} = \frac{3}{1}\begin{bmatrix}1\\0\end{bmatrix} = \begin{bmatrix}3\\0\end{bmatrix}$.
+          This is the shadow of $\vec{b}$ onto the $x$-axis --- the $x$-component of $\vec{b}$.
+    \item $\hat{\vec{a}} = \frac{1}{\sqrt{2}}\begin{bmatrix}1\\1\end{bmatrix}$.
+          $\hat{\vec{a}} \cdot \vec{b} = \frac{1}{\sqrt{2}}(3+4) = \frac{7}{\sqrt{2}}$.
+          Projection: $\frac{7}{\sqrt{2}} \cdot \frac{1}{\sqrt{2}}\begin{bmatrix}1\\1\end{bmatrix}
+          = \frac{7}{2}\begin{bmatrix}1\\1\end{bmatrix} = \begin{bmatrix}3.5\\3.5\end{bmatrix}$.
+    \item Yes --- the logit lens and direct path analysis are both inner product operations.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Orthogonal complements]
+\begin{enumerate}[label=(\alph*)]
+    \item Need $w_1 + w_2 = 0$. Two independent solutions:
+          $\begin{bmatrix}1\\-1\\0\end{bmatrix}$ and $\begin{bmatrix}0\\0\\1\end{bmatrix}$.
+    \item $\dim(U) = 1$, $\dim(U^\perp) = 2$, sum $= 3 = n$. General rule: $\dim(U) + \dim(U^\perp) = n$.
+    \item Project onto $\hat{\vec{a}} = \frac{1}{\sqrt{2}}\begin{bmatrix}1\\1\\0\end{bmatrix}$:
+          coefficient $= \frac{1}{\sqrt{2}}(2+3+0) = \frac{5}{\sqrt{2}}$.
+          Component along $\vec{a}$: $\frac{5}{2}\begin{bmatrix}1\\1\\0\end{bmatrix} = \begin{bmatrix}2.5\\2.5\\0\end{bmatrix}$.
+          Remainder: $\begin{bmatrix}2\\3\\1\end{bmatrix} - \begin{bmatrix}2.5\\2.5\\0\end{bmatrix} = \begin{bmatrix}-0.5\\0.5\\1\end{bmatrix}$.
+    \item Those components are completely invisible to the query projection --- they contribute nothing
+          to attention scores and are effectively discarded by the head.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Angles and the $\sqrt{d}$ scaling]
+\begin{enumerate}[label=(\alph*)]
+    \item $\cos\theta = \frac{0+0}{\sqrt{1}\sqrt{2}} \cdot \ldots$
+          Actually: $\vec{u}\cdot\vec{v} = 1$, $\|\vec{u}\| = 1$, $\|\vec{v}\| = \sqrt{2}$.
+          $\cos\theta = \frac{1}{\sqrt{2}}$, so $\theta = 45^\circ$.
+    \item $\vec{q}\cdot\vec{k} = \cos(45^\circ) = \frac{1}{\sqrt{2}} \approx 0.707$.
+    \item Each has expected norm $8$; $\vec{q}\cdot\vec{k} \approx \|\vec{q}\|\|\vec{k}\|\cos\theta
+          = 8 \cdot 8 \cdot \frac{1}{\sqrt{2}} \approx 45$.
+    \item After scaling: $45 / 8 \approx 5.7$. Without scaling, logits of magnitude $\sim 45$
+          push softmax into saturation (near one-hot), making gradients vanish and the model
+          unable to attend to multiple positions simultaneously.
+\end{enumerate}
+\end{solution}
+
+\end{document}
