@@ -4,6 +4,12 @@
 
 ---
 
+## 2026-04-07
+
+Finished Andrej Karpathy's "Let's build GPT from scratch." Very informative but super dense — estimate I fully understood about 2/3 of it. Appreciated that it pulled almost directly from the original papers rather than simplifying things away. May revisit his makemore series that he references during the video. Will likely need to rewatch some sections once the surrounding concepts are more solid.
+
+---
+
 ## 2026-04-01
 
 3Blue1Brown Essence of Linear Algebra episodes 1–4 complete (vectors, linear combinations, matrix multiplication, determinant). Key terms now solid: basis, linear combination, span. Episode 9 (dot products) remaining.
