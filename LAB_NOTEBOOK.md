@@ -19,7 +19,6 @@ Finished Andrej Karpathy's "Let's build GPT from scratch." Very informative but 
 ## 2026-03-30 — Week 2 Plan (Math & Transformer Foundations)
 
 - [ ] Listen: [80k Hours — Neel Nanda on Mechanistic Interpretability](https://80000hours.org/podcast/episodes/neel-nanda-mechanistic-interpretability/) (~3 hrs, commute-friendly)
-- [ ] Listen: [AXRP Ep. 14 — Chris Olah on Interpretability](https://axrp.net/episode/2021/12/02/episode-14-interpretability-chris-olah.html) (~1 hr, commute-friendly)
 - [ ] Read: [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
 - [ ] Watch: [Andrej Karpathy — Let's build GPT from scratch](https://www.youtube.com/watch?v=kCc8FmEb1nY) (~2 hrs)
 - [~] Watch: [3Blue1Brown — Essence of Linear Algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) (priority episodes: 1, 2, 3, 4 ✓ — episode 9 remaining)
