@@ -4,6 +4,14 @@
 
 ---
 
+## 2026-04-13
+
+Completed `w02-manual-attention.ipynb`. Worked through the full multi-head attention forward pass in PyTorch from scratch using `torch.einsum` — Q/K/V projections, scaled dot-product attention scores, causal masking, softmax, value aggregation, and output projection back to the residual stream. Also completed the einsum practice exercises (dot product, matmul, batched matmul, transpose, outer product).
+
+Reflection questions required some working through — the transpose and scaling motivations weren't immediately obvious. Key things that clicked: the transpose is a shape requirement, not just notation; scaling prevents softmax collapse; dot product works as an attention score because of vector alignment geometry; independent head writes are what make head-level ablation (and therefore circuit analysis) possible.
+
+---
+
 ## 2026-04-07
 
 Finished Andrej Karpathy's "Let's build GPT from scratch." Very informative but super dense — estimate I fully understood about 2/3 of it. Appreciated that it pulled almost directly from the original papers rather than simplifying things away. May revisit his makemore series that he references during the video. Will likely need to rewatch some sections once the surrounding concepts are more solid.
@@ -23,7 +31,7 @@ Finished Andrej Karpathy's "Let's build GPT from scratch." Very informative but 
 - [ ] Watch: [Andrej Karpathy — Let's build GPT from scratch](https://www.youtube.com/watch?v=kCc8FmEb1nY) (~2 hrs)
 - [~] Watch: [3Blue1Brown — Essence of Linear Algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) (priority episodes: 1, 2, 3, 4 ✓ — episode 9 remaining)
 - [ ] Pencil and paper: `resources/linear_algebra_for_mech_interp.pdf` sections 1–4
-- [ ] Code: manual attention forward pass in PyTorch (no TransformerLens); einsum practice notebook
+- [x] Code: manual attention forward pass in PyTorch (no TransformerLens); einsum practice notebook
 
 ---
 
