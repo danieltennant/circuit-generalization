@@ -4,6 +4,12 @@
 
 ---
 
+## 2026-04-11
+
+Finished the remaining Week 2 linear algebra work: 3Blue1Brown episode 9 (dot products) and pencil-and-paper exercises from `resources/linear_algebra_for_mech_interp.pdf` sections 1–4.
+
+---
+
 ## 2026-04-13 — Week 3 Plan (Induction Heads Replication)
 
 - [ ] Read: [In-Context Learning and Induction Heads](https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html) (Olsson 2022) — sections 1–3
