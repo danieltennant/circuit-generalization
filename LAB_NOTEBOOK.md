@@ -4,6 +4,20 @@
 
 ---
 
+## 2026-04-13 — Week 3 Plan (Induction Heads Replication)
+
+- [ ] Read: [In-Context Learning and Induction Heads](https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html) (Olsson 2022) — sections 1–3
+- [ ] ARENA: Section 2 of `part2_intro_to_mech_interp`, exercises 2.1–2.6 (skip 2.7)
+  - 2.1: Visualise attention patterns in a two-layer model
+  - 2.2–2.4: Build detectors for current-token, previous-token, and first-token heads
+  - 2.5–2.6: Create repeated token sequences and build an induction head detector
+- [ ] Code: create `w03-induction-heads.ipynb` — repeated-token sequence, identify induction heads, visualise attention patterns, vary sequence length and token types
+- [ ] Write-up (200–300 words): replication notes — what you found and how it compares to the paper → `notes/replication-induction-heads.md`
+
+*Do ARENA before the notebook — it's more rigorous and has solutions to check against. The notebook is then a clean summary.*
+
+---
+
 ## 2026-04-13
 
 Completed `w02-manual-attention.ipynb`. Worked through the full multi-head attention forward pass in PyTorch from scratch using `torch.einsum` — Q/K/V projections, scaled dot-product attention scores, causal masking, softmax, value aggregation, and output projection back to the residual stream. Also completed the einsum practice exercises (dot product, matmul, batched matmul, transpose, outer product).
@@ -26,11 +40,11 @@ Finished Andrej Karpathy's "Let's build GPT from scratch." Very informative but 
 
 ## 2026-03-30 — Week 2 Plan (Math & Transformer Foundations)
 
-- [ ] Listen: [80k Hours — Neel Nanda on Mechanistic Interpretability](https://80000hours.org/podcast/episodes/neel-nanda-mechanistic-interpretability/) (~3 hrs, commute-friendly)
-- [ ] Read: [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
+- [x] Listen: [80k Hours — Neel Nanda on Mechanistic Interpretability](https://80000hours.org/podcast/episodes/neel-nanda-mechanistic-interpretability/) (~3 hrs, commute-friendly)
+- [~] Read: [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/) — skipped; felt redundant after Karpathy video
 - [ ] Watch: [Andrej Karpathy — Let's build GPT from scratch](https://www.youtube.com/watch?v=kCc8FmEb1nY) (~2 hrs)
-- [~] Watch: [3Blue1Brown — Essence of Linear Algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) (priority episodes: 1, 2, 3, 4 ✓ — episode 9 remaining)
-- [ ] Pencil and paper: `resources/linear_algebra_for_mech_interp.pdf` sections 1–4
+- [x] Watch: [3Blue1Brown — Essence of Linear Algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) (priority episodes: 1, 2, 3, 4, 9 ✓)
+- [x] Pencil and paper: `resources/linear_algebra_for_mech_interp.pdf` sections 1–4
 - [x] Code: manual attention forward pass in PyTorch (no TransformerLens); einsum practice notebook
 
 ---
