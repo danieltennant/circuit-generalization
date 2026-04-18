@@ -10,9 +10,15 @@ Finished the remaining Week 2 linear algebra work: 3Blue1Brown episode 9 (dot pr
 
 ---
 
+## 2026-04-18
+
+Finished reading Olsson et al. (2022) "In-context Learning and Induction Heads" sections 1–3 (Introduction, Key Concepts, Arguments 1–3).
+
+---
+
 ## 2026-04-13 — Week 3 Plan (Induction Heads Replication)
 
-- [ ] Read: [In-Context Learning and Induction Heads](https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html) (Olsson 2022) — sections 1–3
+- [x] Read: [In-Context Learning and Induction Heads](https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html) (Olsson 2022) — sections 1–3
 - [ ] ARENA: Section 2 of `part2_intro_to_mech_interp`, exercises 2.1–2.6 (skip 2.7)
   - 2.1: Visualise attention patterns in a two-layer model
   - 2.2–2.4: Build detectors for current-token, previous-token, and first-token heads
