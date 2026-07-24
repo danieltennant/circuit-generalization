@@ -4,6 +4,20 @@
 
 ---
 
+## 2026-05-15 — BlueDot Technical AI Safety Puzzle
+
+Worked through the [BlueDot Impact Technical AI Safety puzzle](https://bluedot.org/puzzles/technical-ai-safety). The setup: a small MLP trained to predict 8 binary text features simultaneously. After layer 2, 7 features are linearly readable from the activations; one is not. The puzzle asks you to find it, explain the geometry, and then engineer an even weirder representation.
+
+**Part 1 — finding the non-linear feature.** Trained logistic regression probes on the 64-dim post-ReLU layer-2 activations for each feature and compared accuracy to the full model. Country was the obvious outlier: 42.9% probe accuracy vs 96.4% full-model accuracy, a 53.5-point gap. Every other feature was within 0.1%.
+
+**Part 2 — understanding the geometry.** UMAP and pairwise dimension plots showed hints of structure but nothing crisp. MI analysis identified dim 10 (MI=0.299) as the most informative. The breakthrough came from coloring examples by the *joint* food × country label: the four groups (neither / food-only / country-only / both) separated clearly across several key dimension pairs. Country and food are sharing a single activation direction. Projecting onto the LDA direction for the four groups showed country examples occupying the **middle interval** of the shared axis — bounded above by food-only and below by neither. This is a bandpass structure: unreadable by any linear threshold, decoded by the network via ReLU-gated suppressor units.
+
+**Part 3 — engineering a weirder representation.** Built a ring dataset: 2D Gaussian coordinates (h₁, h₂), label = 1 when 0.7 < r < 1.7. Embedded into 64 dims via a random linear map with noise, then trained an MLP with a **2-neuron linear bottleneck**. Ring examples clustered into a band in the bottleneck space (same band structure as the country feature), with the decoder learning a curved boundary around that band. Linear probe on the bottleneck: 62.3% (above baseline, below full model); nonlinear probes matched the full model at ~94%.
+
+Code in `puzzles/bluedot-puzzle-1/`. Writeup: [dtennant.me/writing/bluedot-puzzle](https://dtennant.me/writing/bluedot-puzzle).
+
+---
+
 ## 2026-04-11
 
 Finished the remaining Week 2 linear algebra work: 3Blue1Brown episode 9 (dot products) and pencil-and-paper exercises from `resources/linear_algebra_for_mech_interp.pdf` sections 1–4.
